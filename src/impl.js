@@ -64,6 +64,7 @@ class Impl {
                     '\n' === markdownText.charAt(preLineEnd + 4)
                 ) {
                     re.push([beginPos, preLineEnd + 4]);
+                    beginPos = null;
                 }
             }
         }
