@@ -1,7 +1,8 @@
 {
     "extends": [
         "eslint:recommended",
-        "plugin:node/recommended"
+        "plugin:node/recommended",
+        "plugin:prettier/recommended"
     ],
     "parserOptions": {
         "ecmaVersion": 2018,
@@ -17,7 +18,7 @@
         "array-callback-return": "error",
         "default-case": "error",
         "no-alert": "error",
-        "quotes": ["error", "single"],
+        "quotes": ["error", "single", { "avoidEscape": true }],
         "max-len": ["error", { "code": 120 }],
         "space-before-blocks": "error",
         "space-unary-ops":[
@@ -36,6 +37,13 @@
         "no-useless-escape":"error",
         "camelcase":"error",
         "node/shebang": "error",
-        "node/no-unsupported-features/es-syntax": "off"
+        "node/no-unsupported-features/es-syntax": "off",
+        "prettier/prettier": [
+            "error", {
+                "singleQuote": true,
+                "trailingComma": "es5",
+                "printWidth": 120
+            }
+        ]
     }
 }
