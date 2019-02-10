@@ -27,7 +27,7 @@ class Impl {
                 continue;
             }
             if(pre + 1 === n) {
-                if (re[re.length - 1][1] === pre) {
+                if (0 !== re.length && re[re.length - 1][1] === pre) {
                     re[re.length - 1][1] = n;
                 } else {
                     re.push([pre, n]);
