@@ -5,7 +5,9 @@
   "main": "index.js",
   "types": "./index.d.ts",
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "eslint": "eslint . --cache",
+    "eslint:fix": "eslint --fix . --cache"
   },
   "keywords": [
     "markdown"
