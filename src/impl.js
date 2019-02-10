@@ -9,6 +9,7 @@ class Impl {
         for(let i = 0; -1 !== (i = s.indexOf('\n', i)); ++i) {
             re.push(i);
         }
+        if(re[re.length - 1] !== s.length) re.push(s.length);
         return re;
     }
     /**
