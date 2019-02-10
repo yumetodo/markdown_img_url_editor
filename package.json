@@ -1,0 +1,22 @@
+{
+  "name": "markdown_img_url_editor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "types": "./index.d.ts",
+  "scripts": {
+    "test": "ava"
+  },
+  "keywords": [
+    "markdown"
+  ],
+  "author": "yumetodo",
+  "license": "BSL-1.0",
+  "devDependencies": {
+    "ava": "^1.2.1",
+    "eslint": "^5.13.0"
+  },
+  "dependencies": {
+    "@extra-array/binary-search.closest": "^1.1.1"
+  }
+}
