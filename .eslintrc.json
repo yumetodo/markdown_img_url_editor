@@ -1,9 +1,11 @@
 {
     "extends": [
-        "eslint:recommended"
+        "eslint:recommended",
+        "plugin:node/recommended"
     ],
     "parserOptions": {
-        "ecmaVersion": 2018
+        "ecmaVersion": 2018,
+        "sourceType": "module"
     },
     "env": {
         "node": true,
@@ -32,6 +34,8 @@
         ],
         "quote-props": ["error", "always"],
         "no-useless-escape":"error",
-        "camelcase":"error"
+        "camelcase":"error",
+        "node/shebang": "error",
+        "node/no-unsupported-features/es-syntax": "off"
     }
 }

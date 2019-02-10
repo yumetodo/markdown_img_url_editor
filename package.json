@@ -9,6 +9,9 @@
     "eslint": "eslint . --cache",
     "eslint:fix": "eslint --fix . --cache"
   },
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "keywords": [
     "markdown"
   ],
@@ -16,7 +19,8 @@
   "license": "BSL-1.0",
   "devDependencies": {
     "ava": "^1.2.1",
-    "eslint": "^5.13.0"
+    "eslint": "^5.13.0",
+    "eslint-plugin-node": "^8.0.1"
   },
   "dependencies": {
     "@extra-array/binary-search.closest": "^1.1.1"
