@@ -6,7 +6,7 @@ class Impl {
      */
     static listUpLineEnd(s) {
         let re = [];
-        for(let i = 0; -1 !== (i = s.indexOf('\n')); ++i) {
+        for(let i = 0; -1 !== (i = s.indexOf('\n', i)); ++i) {
             re.push(i);
         }
         return re;
