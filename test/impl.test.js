@@ -27,3 +27,13 @@ test('impl.listUpCodeBlockRange', async t => {
   const re = impl.listUpCodeBlockRange(text, lineEndList);
   t.deepEqual(re, [[43, 70], [151, 271], [303, 336]]);
 });
+test('impl.findNearestParagraphEndPos', async t => {
+  await text2.verify((actual, expected) => t.true(actual === expected));
+  const text = await text2.get();
+  const lineEndList = impl.listUpLineEnd(text);
+  const paragraphList = impl.listUpParagraphDelim(lineEndList);
+  const re1 = impl.findNearestParagraphEndPos(paragraphList, 87, 0);
+  t.deepEqual(re1, [149, 3]);
+  const re2 = impl.findNearestParagraphEndPos(paragraphList, 176, re1[1]);
+  t.deepEqual(re2, [271, 4]);
+});
