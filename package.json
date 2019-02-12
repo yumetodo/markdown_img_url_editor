@@ -33,6 +33,7 @@
     "verifiable-file-read-all-cache": "^1.0.1"
   },
   "dependencies": {
-    "@extra-array/binary-search.closest": "^1.1.1"
+    "@extra-array/binary-search.closest": "^1.1.1",
+    "es-string-algorithm": "^1.0.0"
   }
 }
