@@ -1,4 +1,5 @@
 const bs = require('@extra-array/binary-search.closest');
+const std = require('es-string-algorithm');
 class Impl {
   /**
    * list up LF position
@@ -79,31 +80,53 @@ class Impl {
     const index = bs(paragraphList, pos, (a, b) => a[0] - b, null, begin);
     return [paragraphList[index][0], index];
   }
+  static findNearestCodeBlockBeginPos(codeBlockRangeList, pos, begin) {
+    const index = bs(codeBlockRangeList, pos, (a, b) => a[0] - b, null, begin);
+    return [
+      codeBlockRangeList[index][0] <= pos && pos <= codeBlockRangeList[index][1],
+      codeBlockRangeList[index][0],
+      index,
+    ];
+  }
   /**
    * list up code tag range
    * @param {string} markdownText markdown text
    * @param {number[][]} paragraphList created by `listUpParagraphDelim`
+   * @param {number[][]} codeBlockRangeList created by `listUpCodeBlockRange`
    * @returns {number[][]} array of code tag range
    */
-  static listUpCodeRange(markdownText, paragraphList) {
+  static listUpCodeRange(markdownText, paragraphList, codeBlockRangeList) {
     /** @types {number[][]} */
     let re = [];
-    /** @types {number|null} */
-    let pre = null;
-    let hintPos = 0;
-    for (let pos = 0; -1 !== (pos = markdownText.indexOf('`', pos)); ++pos) {
-      if (pre === null) {
-        pre = pos;
+    let paragraphListHintPos = 0;
+    let codeBlockRangeHintPos = 0;
+    for (let beginPos = 0; -1 !== (beginPos = markdownText.indexOf('`', beginPos)); ) {
+      const [inCodeBlockRange1, nearestCodeBlockBeginPos, index1] = this.findNearestCodeBlockBeginPos(
+        codeBlockRangeList,
+        beginPos,
+        codeBlockRangeHintPos
+      );
+      if (inCodeBlockRange1) {
+        codeBlockRangeHintPos = index1 + 1;
+        beginPos = codeBlockRangeList[index1][1] + 1;
         continue;
       }
-      const [nearestParagraphEndPos, index] = this.findNearestParagraphEndPos(paragraphList, pre, hintPos);
-      if (nearestParagraphEndPos < pos) {
-        pre = pos;
-        hintPos = index;
+      const endPos = std.findFirstNotOf(markdownText, '`', beginPos);
+      const backtickLen = endPos - beginPos;
+      const [nearestParagraphEndPos, index2] = this.findNearestParagraphEndPos(
+        paragraphList,
+        endPos,
+        paragraphListHintPos
+      );
+      const otherBeginPos = markdownText.indexOf('`'.repeat(backtickLen), endPos);
+      if (-1 === otherBeginPos) return re;
+      codeBlockRangeHintPos = otherBeginPos < nearestCodeBlockBeginPos ? index1 : index1 + 1;
+      paragraphListHintPos = otherBeginPos < nearestParagraphEndPos ? index2 : index2 + 1;
+      if (otherBeginPos < nearestCodeBlockBeginPos && otherBeginPos < nearestParagraphEndPos) {
+        re.push([beginPos, otherBeginPos + backtickLen - 1]);
+        beginPos = otherBeginPos + backtickLen;
       } else {
-        re.push([pre, pos]);
-        pre = null;
-        hintPos = Math.max(0, index - 1);
+        beginPos = Math.max(codeBlockRangeList[index1][1], paragraphList[index2][1]);
       }
     }
     return re;
