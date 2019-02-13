@@ -7,7 +7,11 @@ import { Impl } from './impl';
  * @param converter acccept markdown img src and convert
  * @param beforeCollectCallback called before collect convert result
  */
-export async function markdownImgUrlEditor(markdownText: string, converter: (src: string) => Promise<string>, beforeCollectCallback: () => void): Promise<string> {
+export async function markdownImgUrlEditor(
+  markdownText: string,
+  converter: (src: string) => Promise<string>,
+  beforeCollectCallback: () => void
+): Promise<string> {
   let strings: (number | string)[] = [];
   let promiseStrings: Promise<string>[] = [];
   const lineEndList = Impl.listUpLineEnd(markdownText);
@@ -77,4 +81,4 @@ export async function markdownImgUrlEditor(markdownText: string, converter: (src
   if (null != beforeCollectCallback) await beforeCollectCallback();
   const promiseResultStrings = await Promise.all(promiseStrings);
   return strings.map(e => (typeof e === 'number' ? promiseResultStrings[e] : e)).join('');
-};
+}
