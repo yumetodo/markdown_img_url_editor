@@ -1,4 +1,5 @@
-import * as bs from '@extra-array/binary-search.closest';
+// import * as bs from '@extra-array/binary-search.closest';
+import { binarySearchCustom as bs } from './binary-search.closest';
 import * as std from 'es-string-algorithm';
 export namespace Impl {
 /**

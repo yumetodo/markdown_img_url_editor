@@ -1,4 +1,5 @@
-import * as bs from '@extra-array/binary-search.closest';
+// import * as bs from '@extra-array/binary-search.closest';
+import { binarySearch as bs } from './binary-search.closest';
 import { Impl } from './impl';
 /**
  * edit markdown img src
