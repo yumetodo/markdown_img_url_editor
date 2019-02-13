@@ -37,7 +37,7 @@
     "tslint": "^5.12.1",
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.3.3",
-    "verifiable-file-read-all-cache": "^1.0.1"
+    "verifiable-file-read-all-cache": "^1.1.0"
   },
   "dependencies": {
     "@extra-array/binary-search.closest": "^1.1.1",
