@@ -14,8 +14,13 @@ sekai`;
     './test/input/text2.md',
     'd270ba28b95e9f256ca2eb993fc0692b9d755c4b397f75ea2d5deb5cf39c49f1'
   );
+  const text3 = new TextCache(
+    './test/input/text3.md',
+    '4371078c8122b4320a1ed29289118ecd3a7fb8b6a7a3c524305a66f6c4e3341e'
+  );
+  const forVerifier = (actual: string, expected: string) => expect(actual).toEqual(expected);
   it('Impl.listUpParagraphDelim', async () => {
-    await text2.verify((actual, expected) => expect(actual).toEqual(expected));
+    await text2.verify(forVerifier);
     const text = await text2.get();
     const lineEndList = Impl.listUpLineEnd(text);
     const re = Impl.listUpParagraphDelim(lineEndList);
@@ -32,14 +37,13 @@ sekai`;
     ]);
   });
   test('Impl.listUpCodeBlockRange', async () => {
-    await text2.verify((actual, expected) => expect(actual).toEqual(expected));
-    const text = await text2.get();
-    const lineEndList = Impl.listUpLineEnd(text);
-    const re = Impl.listUpCodeBlockRange(text, lineEndList);
+    await text2.verify(forVerifier);
+    const text = await Promise.all([text2.get(), text3.get()]);
+    const re = Impl.listUpCodeBlockRange(text[0], Impl.listUpLineEnd(text[0]));
     expect(re).toEqual([[43, 70], [151, 271], [303, 336]]);
   });
   it('Impl.findNearestParagraphEndPos', async () => {
-    await text2.verify((actual, expected) => expect(actual).toEqual(expected));
+    await text2.verify(forVerifier);
     const text = await text2.get();
     const lineEndList = Impl.listUpLineEnd(text);
     const paragraphList = Impl.listUpParagraphDelim(lineEndList);
@@ -49,7 +53,7 @@ sekai`;
     expect(re2).toEqual([271, 4]);
   });
   it('Impl.listUpCodeRange', async () => {
-    await text2.verify((actual, expected) => expect(actual).toEqual(expected));
+    await text2.verify(forVerifier);
     const text = await text2.get();
     const lineEndList = Impl.listUpLineEnd(text);
     const paragraphList = Impl.listUpParagraphDelim(lineEndList);
