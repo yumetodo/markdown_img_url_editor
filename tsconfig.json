@@ -6,10 +6,10 @@
     "target": "es2017",
     "declaration": true,
     "strictNullChecks": true,
-    "typeRoots": [
-      "@types",
-      "node_modules/@types"
-    ],
+    "baseUrl": ".",
+    "paths": {
+      "*": ["@types/*"]
+    },
     "esModuleInterop": true
   },
   "include": ["src/**/*"],

@@ -1,6 +1,11 @@
 // import * as bs from '@extra-array/binary-search.closest';
 import { binarySearchCustom as bs } from './binary-search.closest';
+import Zs from 'unicode/category/Zs';
 import * as std from 'es-string-algorithm';
+const whiteSpace =
+  Object.entries(Zs)
+    .map((e: [string, typeof Zs[0]]) => e[1].symbol)
+    .join('') + '\u{0009}\u{000B}\u{000C}';
 export namespace Impl {
   /**
    * list up LF position
@@ -12,6 +17,42 @@ export namespace Impl {
       re.push(i);
     }
     if (re[re.length - 1] !== s.length) re.push(s.length);
+    return re;
+  }
+  export function listUpCodeBlockByIndentRange(markdownText: string, lineEndList: number[]): number[][] {
+    let re: number[][] = [];
+    let preLineEnd = 0;
+    let pre: number | null = null;
+    let needNotToAppend = false;
+    let prevLineIsBlank = false;
+    for (const lineEnd of lineEndList) {
+      const lineFront = preLineEnd + 1;
+      console.log(`line: "${markdownText.substring(lineFront, lineEnd)}"`);
+      if (
+        (prevLineIsBlank || null !== pre || needNotToAppend) &&
+        lineFront + 4 <= std.findFirstNotOf(markdownText, whiteSpace, lineFront)
+      ) {
+        if (needNotToAppend) {
+          re[re.length - 1][1] = lineEnd - 1;
+          needNotToAppend = true;
+        } else if (null === pre) {
+          pre = lineFront;
+          needNotToAppend = false;
+        } else {
+          re.push([pre, lineEnd - 1]);
+          pre = null;
+          needNotToAppend = true;
+        }
+        prevLineIsBlank = false;
+      } else {
+        prevLineIsBlank = lineEnd === std.findFirstNotOf(markdownText, whiteSpace, lineFront);
+        needNotToAppend = false;
+      }
+      preLineEnd = lineEnd;
+    }
+    if (null !== pre) {
+      re.push([pre, preLineEnd - 1]);
+    }
     return re;
   }
   /**

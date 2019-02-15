@@ -24,7 +24,7 @@
   "author": "yumetodo",
   "license": "BSL-1.0",
   "devDependencies": {
-    "@types/jest": "^24.0.3",
+    "@types/jest": "^24.0.4",
     "ava": "^1.2.1",
     "eslint": "^5.13.0",
     "eslint-config-prettier": "^4.0.0",
@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "@extra-array/binary-search.closest": "^1.1.1",
-    "es-string-algorithm": "^1.0.0"
+    "es-string-algorithm": "^1.0.1",
+    "unicode": "^11.0.1"
   },
   "jest": {
     "transform": {
