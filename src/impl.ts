@@ -27,7 +27,6 @@ export namespace Impl {
     let prevLineIsBlank = false;
     for (const lineEnd of lineEndList) {
       const lineFront = preLineEnd + 1;
-      console.log(`line: "${markdownText.substring(lineFront, lineEnd)}"`);
       if (
         (prevLineIsBlank || null !== pre || needNotToAppend) &&
         lineFront + 4 <= std.findFirstNotOf(markdownText, whiteSpace, lineFront)
