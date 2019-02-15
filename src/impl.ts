@@ -45,7 +45,7 @@ export namespace Impl {
         prevLineIsBlank = false;
       } else {
         prevLineIsBlank = lineEnd === std.findFirstNotOf(markdownText, whiteSpace, lineFront);
-        needNotToAppend = false;
+        if (!prevLineIsBlank) needNotToAppend = false;
       }
       preLineEnd = lineEnd;
     }
