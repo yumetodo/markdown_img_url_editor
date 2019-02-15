@@ -75,10 +75,10 @@ export namespace Impl {
   /**
    * list up paragraph
    * @param lineEndList created by `listUpLineEnd`
-   * @param codeBlockByIndentRange created by `listUpCodeBlockRangeMadeByIndent`
+   * @param codeBlockRangeMadeByIndent created by `listUpCodeBlockRangeMadeByIndent`
    * @returns array of paragraph delim range
    */
-  export function listUpParagraphDelim(lineEndList: number[], codeBlockByIndentRange: number[][]): number[][] {
+  export function listUpParagraphDelim(lineEndList: number[], codeBlockRangeMadeByIndent: number[][]): number[][] {
     let re: number[][] = [];
     let pre: number | null = null;
     let hint = 0;
@@ -87,8 +87,8 @@ export namespace Impl {
         pre = n;
         continue;
       }
-      const [isCodeBlockByIndentRange, index] = isInRange(codeBlockByIndentRange, n, hint);
-      if (pre + 1 === n && !isCodeBlockByIndentRange) {
+      const [iscodeBlockRangeMadeByIndent, index] = isInRange(codeBlockRangeMadeByIndent, n, hint);
+      if (pre + 1 === n && !iscodeBlockRangeMadeByIndent) {
         if (0 !== re.length && re[re.length - 1][1] === pre) {
           re[re.length - 1][1] = n;
         } else {
