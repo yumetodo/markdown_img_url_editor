@@ -19,7 +19,13 @@ export namespace Impl {
     if (re[re.length - 1] !== s.length) re.push(s.length);
     return re;
   }
-  export function listUpCodeBlockByIndentRange(markdownText: string, lineEndList: number[]): number[][] {
+  /**
+   * list up code block range made by indent
+   * @param markdownText markdown text
+   * @param lineEndList created by `listUpLineEnd`
+   * @returns array of code block range
+   */
+  export function listUpCodeBlockRangeMadeByIndent(markdownText: string, lineEndList: number[]): number[][] {
     let re: number[][] = [];
     let preLineEnd = 0;
     let pre: number | null = null;
