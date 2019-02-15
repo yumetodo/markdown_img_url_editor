@@ -28,11 +28,11 @@ sekai`;
     expect(re2).toEqual([[70, 84], [117, 139], [145, 178]]);
   });
   it('Impl.listUpParagraphDelim', async () => {
-    await text2.verify(forVerifier);
-    const text = await text2.get();
-    const lineEndList = Impl.listUpLineEnd(text);
-    const re = Impl.listUpParagraphDelim(lineEndList);
-    expect(re).toEqual([
+    await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
+    const text = await Promise.all([text2.get(), text3.get()]);
+    const lineEndList1 = Impl.listUpLineEnd(text[0]);
+    const re1 = Impl.listUpParagraphDelim(lineEndList1, Impl.listUpCodeBlockByIndentRange(text[0], lineEndList1));
+    expect(re1).toEqual([
       [8, 9],
       [41, 42],
       [70, 71],
@@ -42,6 +42,20 @@ sekai`;
       [336, 337],
       [345, 346],
       [788, 789],
+    ]);
+    const lineEndList2 = Impl.listUpLineEnd(text[1]);
+    const re2 = Impl.listUpParagraphDelim(lineEndList2, Impl.listUpCodeBlockByIndentRange(text[1], lineEndList2));
+    expect(re2).toEqual([
+      [25, 26],
+      [34, 35],
+      [65, 66],
+      [68, 69],
+      [85, 86],
+      [101, 102],
+      [115, 116],
+      [140, 141],
+      [143, 144],
+      [179, 179],
     ]);
   });
   test('Impl.listUpCodeBlockRange', async () => {
@@ -54,7 +68,8 @@ sekai`;
     await text2.verify(forVerifier);
     const text = await text2.get();
     const lineEndList = Impl.listUpLineEnd(text);
-    const paragraphList = Impl.listUpParagraphDelim(lineEndList);
+    const codeBlockByIndentRange = Impl.listUpCodeBlockByIndentRange(text, lineEndList);
+    const paragraphList = Impl.listUpParagraphDelim(lineEndList, codeBlockByIndentRange);
     const re1 = Impl.findNearestParagraphEndPos(paragraphList, 87, 0);
     expect(re1).toEqual([149, 3]);
     const re2 = Impl.findNearestParagraphEndPos(paragraphList, 176, re1[1]);
@@ -64,7 +79,8 @@ sekai`;
     await text2.verify(forVerifier);
     const text = await text2.get();
     const lineEndList = Impl.listUpLineEnd(text);
-    const paragraphList = Impl.listUpParagraphDelim(lineEndList);
+    const codeBlockByIndentRange = Impl.listUpCodeBlockByIndentRange(text, lineEndList);
+    const paragraphList = Impl.listUpParagraphDelim(lineEndList, codeBlockByIndentRange);
     const codeBlockRangeList = Impl.listUpCodeBlockRange(text, lineEndList);
     const re1 = Impl.listUpCodeRange(text, paragraphList, codeBlockRangeList);
     expect(re1).toEqual([[77, 90]]);
