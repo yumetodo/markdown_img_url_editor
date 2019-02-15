@@ -16,9 +16,17 @@ sekai`;
   );
   const text3 = new TextCache(
     './test/input/text3.md',
-    '4371078c8122b4320a1ed29289118ecd3a7fb8b6a7a3c524305a66f6c4e3341e'
+    '92fd84ffa4de3d94d56989e4cf6b263b2419f5c5f72f5bd91ba701995643d32a'
   );
   const forVerifier = (actual: string, expected: string) => expect(actual).toEqual(expected);
+  it('Impl.listUpCodeBlockByIndentRange', async () => {
+    await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
+    const text = await Promise.all([text2.get(), text3.get()]);
+    const re1 = Impl.listUpCodeBlockByIndentRange(text[0], Impl.listUpLineEnd(text[0]));
+    expect(re1).toEqual([]);
+    const re2 = Impl.listUpCodeBlockByIndentRange(text[1], Impl.listUpLineEnd(text[1]));
+    expect(re2).toEqual([[70, 84], [117, 139], [145, 169], [172, 178]]);
+  });
   it('Impl.listUpParagraphDelim', async () => {
     await text2.verify(forVerifier);
     const text = await text2.get();
