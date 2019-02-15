@@ -25,7 +25,7 @@ sekai`;
     const re1 = Impl.listUpCodeBlockByIndentRange(text[0], Impl.listUpLineEnd(text[0]));
     expect(re1).toEqual([]);
     const re2 = Impl.listUpCodeBlockByIndentRange(text[1], Impl.listUpLineEnd(text[1]));
-    expect(re2).toEqual([[70, 84], [117, 139], [145, 169], [172, 178]]);
+    expect(re2).toEqual([[70, 84], [117, 139], [145, 178]]);
   });
   it('Impl.listUpParagraphDelim', async () => {
     await text2.verify(forVerifier);
