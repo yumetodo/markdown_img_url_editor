@@ -55,25 +55,40 @@ export namespace Impl {
     return re;
   }
   /**
+   * check weather pos is in range
+   * @param rangeList array of range
+   * @param pos
+   * @param begin
+   */
+  export function isInRange(rangeList: number[][], pos: number, begin: number): [boolean, number] {
+    if (0 === rangeList.length) return [false, 0];
+    const index = bs(rangeList, pos, (a, b) => a[1] - b, null, begin);
+    if (rangeList.length <= index) return [false, 0];
+    return [rangeList[index][0] <= pos && pos <= rangeList[index][1], index];
+  }
+  /**
    * list up paragraph
    * @param lineEndList created by `listUpLineEnd`
    * @returns array of paragraph delim range
    */
-  export function listUpParagraphDelim(lineEndList: number[]): number[][] {
+  export function listUpParagraphDelim(lineEndList: number[], codeBlockByIndentRange: number[][]): number[][] {
     let re: number[][] = [];
     let pre: number | null = null;
+    let hint = 0;
     for (const n of lineEndList) {
       if (null === pre) {
         pre = n;
         continue;
       }
-      if (pre + 1 === n) {
+      const [isCodeBlockByIndentRange, index] = isInRange(codeBlockByIndentRange, n, hint);
+      if (pre + 1 === n && !isCodeBlockByIndentRange) {
         if (0 !== re.length && re[re.length - 1][1] === pre) {
           re[re.length - 1][1] = n;
         } else {
           re.push([pre, n]);
         }
       }
+      hint = index;
       pre = n;
     }
     const last = lineEndList[lineEndList.length - 1];
@@ -176,15 +191,5 @@ export namespace Impl {
       }
     }
     return re;
-  }
-  /**
-   * check weather pos is in range
-   * @param rangeList array of range
-   * @param pos
-   * @param begin
-   */
-  export function isInRange(rangeList: number[][], pos: number, begin: number): [boolean, number] {
-    const index = bs(rangeList, pos, (a, b) => a[1] - b, null, begin);
-    return [rangeList[index][0] <= pos && pos <= rangeList[index][1], index];
   }
 }
