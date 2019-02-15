@@ -75,6 +75,7 @@ export namespace Impl {
   /**
    * list up paragraph
    * @param lineEndList created by `listUpLineEnd`
+   * @param codeBlockByIndentRange created by `listUpCodeBlockRangeMadeByIndent`
    * @returns array of paragraph delim range
    */
   export function listUpParagraphDelim(lineEndList: number[], codeBlockByIndentRange: number[][]): number[][] {
