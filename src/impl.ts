@@ -119,19 +119,21 @@ export namespace Impl {
     let re: number[][] = [];
     let beginPos: number | null = null;
     let prevBacktickLen: number | null = null;
-    {
+    (() => {
       const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, 0);
+      if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos) return;
       const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
       const backtickLen = backtickEndPos - spaceEndpos;
       if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
         beginPos = 0;
         prevBacktickLen = backtickLen;
       }
-    }
+    })();
     for (const preLineEnd of lineEndList) {
       if (0 !== re.length && preLineEnd <= re[re.length - 1][1]) continue;
       const lineFront = preLineEnd + 1;
       const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, lineFront);
+      if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos - lineFront) continue;
       const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
       const backtickLen = backtickEndPos - spaceEndpos;
       if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
