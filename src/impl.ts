@@ -106,6 +106,10 @@ export namespace Impl {
     }
     return re;
   }
+  /**
+   * check is line end charactor
+   * @param c expect string contain one charactor
+   */
   function isLineEndChar(c: string): boolean {
     return '\r' === c || `\n` === c;
   }
