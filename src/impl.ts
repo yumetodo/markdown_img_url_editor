@@ -22,6 +22,56 @@ export namespace Impl {
     return re;
   }
   /**
+   * check is line end charactor
+   * @param c expect string contain one charactor
+   */
+  function isLineEndChar(c: string): boolean {
+    return '\r' === c || `\n` === c;
+  }
+  /**
+   * list up code block range
+   * @param markdownText markdown text
+   * @param lineEndList lineEndList created by `listUpLineEnd`
+   * @returns array of code block range
+   */
+  export function listUpCodeBlockRange(markdownText: string, lineEndList: number[]): number[][] {
+    let re: number[][] = [];
+    let beginPos: number | null = null;
+    let prevBacktickLen: number | null = null;
+    (() => {
+      const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, 0);
+      if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos) return;
+      const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
+      const backtickLen = backtickEndPos - spaceEndpos;
+      if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
+        beginPos = 0;
+        prevBacktickLen = backtickLen;
+      }
+    })();
+    for (const preLineEnd of lineEndList) {
+      if (0 !== re.length && preLineEnd <= re[re.length - 1][1]) continue;
+      const lineFront = preLineEnd + 1;
+      const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, lineFront);
+      if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos - lineFront) continue;
+      const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
+      const backtickLen = backtickEndPos - spaceEndpos;
+      if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
+        if (null === beginPos || null === prevBacktickLen) {
+          beginPos = lineFront;
+          prevBacktickLen = backtickLen;
+        } else if (prevBacktickLen <= backtickLen) {
+          const mayBeLineEndPos = std.findFirstNotOf(markdownText, whiteSpace, backtickEndPos);
+          if (isLineEndChar(markdownText.charAt(mayBeLineEndPos))) {
+            re.push([beginPos, mayBeLineEndPos - 1]);
+            beginPos = null;
+            prevBacktickLen = null;
+          }
+        }
+      }
+    }
+    return re;
+  }
+  /**
    * list up code block range made by indent
    * @param markdownText markdown text
    * @param lineEndList created by `listUpLineEnd`
@@ -103,56 +153,6 @@ export namespace Impl {
     const last = lineEndList[lineEndList.length - 1];
     if (re[re.length - 1][1] !== last) {
       re.push([last, last]);
-    }
-    return re;
-  }
-  /**
-   * check is line end charactor
-   * @param c expect string contain one charactor
-   */
-  function isLineEndChar(c: string): boolean {
-    return '\r' === c || `\n` === c;
-  }
-  /**
-   * list up code block range
-   * @param markdownText markdown text
-   * @param lineEndList lineEndList created by `listUpLineEnd`
-   * @returns array of code block range
-   */
-  export function listUpCodeBlockRange(markdownText: string, lineEndList: number[]): number[][] {
-    let re: number[][] = [];
-    let beginPos: number | null = null;
-    let prevBacktickLen: number | null = null;
-    (() => {
-      const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, 0);
-      if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos) return;
-      const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
-      const backtickLen = backtickEndPos - spaceEndpos;
-      if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
-        beginPos = 0;
-        prevBacktickLen = backtickLen;
-      }
-    })();
-    for (const preLineEnd of lineEndList) {
-      if (0 !== re.length && preLineEnd <= re[re.length - 1][1]) continue;
-      const lineFront = preLineEnd + 1;
-      const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, lineFront);
-      if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos - lineFront) continue;
-      const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
-      const backtickLen = backtickEndPos - spaceEndpos;
-      if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
-        if (null === beginPos || null === prevBacktickLen) {
-          beginPos = lineFront;
-          prevBacktickLen = backtickLen;
-        } else if (prevBacktickLen <= backtickLen) {
-          const mayBeLineEndPos = std.findFirstNotOf(markdownText, whiteSpace, backtickEndPos);
-          if (isLineEndChar(markdownText.charAt(mayBeLineEndPos))) {
-            re.push([beginPos, mayBeLineEndPos - 1]);
-            beginPos = null;
-            prevBacktickLen = null;
-          }
-        }
-      }
     }
     return re;
   }
