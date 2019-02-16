@@ -72,21 +72,50 @@ export namespace Impl {
     return re;
   }
   /**
+   * check weather pos is in range
+   * @param rangeList array of range
+   * @param pos
+   * @param begin
+   */
+  export function isInRange(rangeList: number[][], pos: number, begin: number): [boolean, number] {
+    if (0 === rangeList.length) return [false, 0];
+    const index = bs(rangeList, pos, (a, b) => a[1] - b, null, begin);
+    if (rangeList.length <= index) return [false, 0];
+    return [rangeList[index][0] <= pos && pos <= rangeList[index][1], index];
+  }
+  /**
    * list up code block range made by indent
    * @param markdownText markdown text
    * @param lineEndList created by `listUpLineEnd`
+   * @param codeBlockRange created by `listUpCodeBlockRange`
    * @returns array of code block range
    */
-  export function listUpCodeBlockRangeMadeByIndent(markdownText: string, lineEndList: number[]): number[][] {
+  export function listUpCodeBlockRangeMadeByIndent(
+    markdownText: string,
+    lineEndList: number[],
+    codeBlockRange: number[][]
+  ): number[][] {
     let re: number[][] = [];
     let preLineEnd = 0;
     let pre: number | null = null;
     let needNotToAppend = false;
     let prevLineIsBlank = false;
+    let prevIsInCodeBlock = false;
+    let hint = 0;
     for (const lineEnd of lineEndList) {
       const lineFront = preLineEnd + 1;
+      const [isCodeBlockRange, index] = isInRange(codeBlockRange, lineFront, hint);
+      hint = index;
+      if (isCodeBlockRange) {
+        prevIsInCodeBlock = true;
+        if (null !== pre) {
+          re.push([pre, lineEnd - 1]);
+          pre = null;
+        }
+        continue;
+      }
       if (
-        (prevLineIsBlank || null !== pre || needNotToAppend) &&
+        (prevIsInCodeBlock || prevLineIsBlank || null !== pre || needNotToAppend) &&
         lineFront + recognizeAsCodeBlockIndentSpaceLen <= std.findFirstNotOf(markdownText, whiteSpace, lineFront)
       ) {
         if (needNotToAppend) {
@@ -105,24 +134,13 @@ export namespace Impl {
         prevLineIsBlank = lineEnd === std.findFirstNotOf(markdownText, whiteSpace, lineFront);
         if (!prevLineIsBlank) needNotToAppend = false;
       }
+      prevIsInCodeBlock = false;
       preLineEnd = lineEnd;
     }
     if (null !== pre) {
       re.push([pre, preLineEnd - 1]);
     }
     return re;
-  }
-  /**
-   * check weather pos is in range
-   * @param rangeList array of range
-   * @param pos
-   * @param begin
-   */
-  export function isInRange(rangeList: number[][], pos: number, begin: number): [boolean, number] {
-    if (0 === rangeList.length) return [false, 0];
-    const index = bs(rangeList, pos, (a, b) => a[1] - b, null, begin);
-    if (rangeList.length <= index) return [false, 0];
-    return [rangeList[index][0] <= pos && pos <= rangeList[index][1], index];
   }
   /**
    * list up paragraph
