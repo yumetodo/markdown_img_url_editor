@@ -139,7 +139,7 @@ export namespace Impl {
         } else if (prevBacktickLen <= backtickLen) {
           const mayBeLineEndPos = std.findFirstNotOf(markdownText, whiteSpace, backtickEndPos);
           if (isLineEndChar(markdownText.charAt(mayBeLineEndPos))) {
-            re.push([beginPos, preLineEnd + 4]);
+            re.push([beginPos, mayBeLineEndPos - 1]);
             beginPos = null;
             prevBacktickLen = null;
           }
