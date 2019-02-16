@@ -40,7 +40,6 @@
     "verifiable-file-read-all-cache": "^1.1.0"
   },
   "dependencies": {
-    "@extra-array/binary-search.closest": "^1.1.1",
     "es-string-algorithm": "^1.0.1",
     "unicode": "^11.0.1"
   },
