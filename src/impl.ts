@@ -6,6 +6,8 @@ const whiteSpace =
   Object.entries(Zs)
     .map((e: [string, typeof Zs[0]]) => e[1].symbol)
     .join('') + '\u{0009}\u{000B}\u{000C}';
+const recognizeAsCodeBlockIndentSpaceLen = 4;
+const recognizeAsCodeBlockBacktickLen = 3;
 export namespace Impl {
   /**
    * list up LF position
@@ -35,7 +37,7 @@ export namespace Impl {
       const lineFront = preLineEnd + 1;
       if (
         (prevLineIsBlank || null !== pre || needNotToAppend) &&
-        lineFront + 4 <= std.findFirstNotOf(markdownText, whiteSpace, lineFront)
+        lineFront + recognizeAsCodeBlockIndentSpaceLen <= std.findFirstNotOf(markdownText, whiteSpace, lineFront)
       ) {
         if (needNotToAppend) {
           re[re.length - 1][1] = lineEnd - 1;
@@ -121,7 +123,7 @@ export namespace Impl {
       const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, 0);
       const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
       const backtickLen = backtickEndPos - spaceEndpos;
-      if (3 <= backtickLen) {
+      if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
         beginPos = 0;
         prevBacktickLen = backtickLen;
       }
@@ -132,7 +134,7 @@ export namespace Impl {
       const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, lineFront);
       const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
       const backtickLen = backtickEndPos - spaceEndpos;
-      if (3 <= backtickLen) {
+      if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
         if (null === beginPos || null === prevBacktickLen) {
           beginPos = lineFront;
           prevBacktickLen = backtickLen;
