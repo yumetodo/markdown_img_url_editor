@@ -16,7 +16,7 @@ sekai`;
   );
   const text3 = new TextCache(
     './test/input/text3.md',
-    '92fd84ffa4de3d94d56989e4cf6b263b2419f5c5f72f5bd91ba701995643d32a'
+    'ef941b526068d42f203de291a366d99f172069809e5a5e7f1856ebb015678358'
   );
   const forVerifier = (actual: string, expected: string) => expect(actual).toEqual(expected);
   it('Impl.listUpCodeBlockByIndentRange', async () => {
@@ -61,7 +61,9 @@ sekai`;
   test('Impl.listUpCodeBlockRange', async () => {
     await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
     const text = await Promise.all([text2.get(), text3.get()]);
-    const re1 = Impl.listUpCodeBlockRange(text[0], Impl.listUpLineEnd(text[0]));
+    const lineEndList1 = Impl.listUpLineEnd(text[0]);
+    const codeBlockRangeMadeByIndent = Impl.listUpCodeBlockRangeMadeByIndent(text[0], lineEndList1);
+    const re1 = Impl.listUpCodeBlockRange(text[0], lineEndList1);
     expect(re1).toEqual([[43, 70], [151, 271], [303, 336]]);
     // const re2 = Impl.listUpCodeBlockRange(text[1], Impl.listUpLineEnd(text[0]));
     // expect(re2).toEqual([[0, 25], [37, 65], [303, 336]]);

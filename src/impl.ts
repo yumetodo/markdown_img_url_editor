@@ -104,6 +104,9 @@ export namespace Impl {
     }
     return re;
   }
+  function isLineEndChar(c: string): boolean {
+    return '\r' === c || `\n` === c;
+  }
   /**
    * list up code block range
    * @param markdownText markdown text
@@ -113,16 +116,33 @@ export namespace Impl {
   export function listUpCodeBlockRange(markdownText: string, lineEndList: number[]): number[][] {
     let re: number[][] = [];
     let beginPos: number | null = null;
-    if (markdownText.startsWith('```')) {
-      beginPos = 0;
+    let prevBacktickLen: number | null = null;
+    {
+      const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, 0);
+      const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
+      const backtickLen = backtickEndPos - spaceEndpos;
+      if (3 <= backtickLen) {
+        beginPos = 0;
+        prevBacktickLen = backtickLen;
+      }
     }
     for (const preLineEnd of lineEndList) {
-      if (markdownText.startsWith('```', preLineEnd + 1)) {
-        if (null === beginPos) {
-          beginPos = preLineEnd + 1;
-        } else if ('\r' === markdownText.charAt(preLineEnd + 4) || '\n' === markdownText.charAt(preLineEnd + 4)) {
-          re.push([beginPos, preLineEnd + 4]);
-          beginPos = null;
+      if (0 !== re.length && preLineEnd <= re[re.length - 1][1]) continue;
+      const lineFront = preLineEnd + 1;
+      const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, lineFront);
+      const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
+      const backtickLen = backtickEndPos - spaceEndpos;
+      if (3 <= backtickLen) {
+        if (null === beginPos || null === prevBacktickLen) {
+          beginPos = lineFront;
+          prevBacktickLen = backtickLen;
+        } else if (prevBacktickLen <= backtickLen) {
+          const mayBeLineEndPos = std.findFirstNotOf(markdownText, whiteSpace, backtickEndPos);
+          if (isLineEndChar(markdownText.charAt(mayBeLineEndPos))) {
+            re.push([beginPos, preLineEnd + 4]);
+            beginPos = null;
+            prevBacktickLen = null;
+          }
         }
       }
     }
