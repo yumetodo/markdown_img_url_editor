@@ -1,6 +1,6 @@
 import { Impl } from '../src/impl';
 import TextCache from 'verifiable-file-read-all-cache';
-// const TextCache = require('verifiable-file-read-all-cache');
+import deepFreeze from 'deep-freeze';
 describe('impl', async () => {
   const text1 = `arikitari
 na

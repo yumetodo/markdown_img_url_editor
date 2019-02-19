@@ -1,6 +1,11 @@
 // MIT License
 // Copyright (c) 2018 Merferry
-export function binarySearch(arr: number[], val: number, bgn: number = 0, end: number = arr.length): number {
+export function binarySearch(
+  arr: number[] | ReadonlyArray<number[]>,
+  val: number,
+  bgn: number = 0,
+  end: number = arr.length
+): number {
   while (bgn < end) {
     const m = (bgn + end) >>> 1;
     if (arr[m] < val) bgn = m + 1;
@@ -11,7 +16,7 @@ export function binarySearch(arr: number[], val: number, bgn: number = 0, end: n
 }
 
 export function binarySearchCustom<T, U>(
-  arr: T[],
+  arr: T[] | ReadonlyArray<T[]>,
   val: U,
   fn: (e: T, v: U, m?: number, arr?: T[]) => number,
   ths?: Function | null,

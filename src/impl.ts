@@ -86,7 +86,11 @@ export namespace Impl {
    * @param pos
    * @param begin
    */
-  export function isInRange(rangeList: number[][], pos: number, begin: number): [boolean, number] {
+  export function isInRange(
+    rangeList: number[][] | ReadonlyArray<number[][]>,
+    pos: number,
+    begin: number
+  ): [boolean, number] {
     if (0 === rangeList.length) return [false, 0];
     const index = bs(rangeList, pos, (a, b) => a[1] - b, null, begin);
     if (rangeList.length <= index) return [false, 0];
@@ -99,10 +103,10 @@ export namespace Impl {
    * @param codeBlockRange created by `listUpCodeBlockRange`
    * @returns array of code block range
    */
-  export function listUpCodeBlockRangeMadeByIndent(
+  export function listUpCodeBlockRangeMadeByIndentAndMerge(
     markdownText: string,
     lineEndList: number[],
-    codeBlockRange: number[][]
+    codeBlockRange: number[][] | ReadonlyArray<number[][]>
   ): number[][] {
     let re: number[][] = [];
     let preLineEnd = 0;
