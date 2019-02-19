@@ -34,7 +34,7 @@ export namespace Impl {
    * @param lineEndList lineEndList created by `listUpLineEnd`
    * @returns array of code block range
    */
-  export function listUpCodeBlockRange(markdownText: string, lineEndList: number[]): number[][] {
+  export function listUpCodeBlockRange(markdownText: string, lineEndList: ReadonlyArray<number>): number[][] {
     let re: number[][] = [];
     let beginPos: number | null = null;
     let prevBacktickLen: number | null = null;
@@ -105,7 +105,7 @@ export namespace Impl {
    */
   export function listUpCodeBlockRangeMadeByIndentAndMerge(
     markdownText: string,
-    lineEndList: number[],
+    lineEndList: ReadonlyArray<number>,
     codeBlockRange: ReadonlyArray<ReadonlyArray<number>>
   ): number[][] {
     let re: number[][] = [];
@@ -124,6 +124,10 @@ export namespace Impl {
         if (null !== pre) {
           re.push([pre, lineEnd - 1]);
           pre = null;
+        }
+        // merge
+        if (0 !== re.length && re[re.length - 1][0] !== codeBlockRange[index][0]) {
+          re.push([codeBlockRange[index][0], codeBlockRange[index][1]]);
         }
         continue;
       }
@@ -158,10 +162,13 @@ export namespace Impl {
   /**
    * list up paragraph
    * @param lineEndList created by `listUpLineEnd`
-   * @param codeBlockRangeMadeByIndent created by `listUpCodeBlockRangeMadeByIndent`
+   * @param codeBlockRangeMerged created by `listUpCodeBlockRangeMadeByIndentAndMerge`
    * @returns array of paragraph delim range
    */
-  export function listUpParagraphDelim(lineEndList: number[], codeBlockRangeMadeByIndent: number[][]): number[][] {
+  export function listUpParagraphDelim(
+    lineEndList: ReadonlyArray<number>,
+    codeBlockRangeMerged: ReadonlyArray<ReadonlyArray<number>>
+  ): number[][] {
     let re: number[][] = [];
     let pre: number | null = null;
     let hint = 0;
@@ -170,8 +177,8 @@ export namespace Impl {
         pre = n;
         continue;
       }
-      const [iscodeBlockRangeMadeByIndent, index] = isInRange(codeBlockRangeMadeByIndent, n, hint);
-      if (pre + 1 === n && !iscodeBlockRangeMadeByIndent) {
+      const [isCodeBlockRangeMerged, index] = isInRange(codeBlockRangeMerged, n, hint);
+      if (pre + 1 === n && !isCodeBlockRangeMerged) {
         if (0 !== re.length && re[re.length - 1][1] === pre) {
           re[re.length - 1][1] = n;
         } else {
@@ -194,7 +201,11 @@ export namespace Impl {
    * @param begin search begin index in `paragraphList`
    * @returns the pair of find nearest paragraph end pos and the index in `paragraphList`
    */
-  export function findNearestParagraphEndPos(paragraphList: number[][], pos: number, begin: number): [number, number] {
+  export function findNearestParagraphEndPos(
+    paragraphList: ReadonlyArray<ReadonlyArray<number>>,
+    pos: number,
+    begin: number
+  ): [number, number] {
     const index = bs(paragraphList, pos, (a, b) => a[0] - b, null, begin);
     return [paragraphList[index][0], index];
   }
@@ -205,7 +216,7 @@ export namespace Impl {
    * @param begin search begin index in `codeBlockRangeList`
    */
   export function findNearestCodeBlockBeginPos(
-    codeBlockRangeList: number[][],
+    codeBlockRangeList: ReadonlyArray<ReadonlyArray<number>>,
     pos: number,
     begin: number
   ): [boolean, number, number] {
@@ -225,8 +236,8 @@ export namespace Impl {
    */
   export function listUpCodeRange(
     markdownText: string,
-    paragraphList: number[][],
-    codeBlockRangeList: number[][]
+    paragraphList: ReadonlyArray<ReadonlyArray<number>>,
+    codeBlockRangeList: ReadonlyArray<ReadonlyArray<number>>
   ): number[][] {
     let re: number[][] = [];
     let paragraphListHintPos = 0;

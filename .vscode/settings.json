@@ -1,3 +1,15 @@
 {
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "bracketPairColorizer.consecutivePairColors": [
+        "()",
+        "[]",
+        "{}",
+        "<>",
+        [
+            "Gold",
+            "Orchid",
+            "LightSkyBlue"
+        ],
+        "Red"
+    ]
 }
