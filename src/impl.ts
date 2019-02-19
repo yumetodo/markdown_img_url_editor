@@ -50,6 +50,15 @@ export namespace Impl {
     })();
     for (const preLineEnd of lineEndList) {
       if (0 !== re.length && preLineEnd <= re[re.length - 1][1]) continue;
+      // skip code tag
+      if (
+        null != beginPos &&
+        null != prevBacktickLen &&
+        markdownText.indexOf('`'.repeat(prevBacktickLen), beginPos + prevBacktickLen) < preLineEnd
+      ) {
+        beginPos = null;
+        prevBacktickLen = null;
+      }
       const lineFront = preLineEnd + 1;
       const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, lineFront);
       if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos - lineFront) continue;
