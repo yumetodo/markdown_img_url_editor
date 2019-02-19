@@ -1,7 +1,7 @@
 // MIT License
 // Copyright (c) 2018 Merferry
 export function binarySearch(
-  arr: number[] | ReadonlyArray<number[]>,
+  arr: number[] | ReadonlyArray<number>,
   val: number,
   bgn: number = 0,
   end: number = arr.length
@@ -16,7 +16,7 @@ export function binarySearch(
 }
 
 export function binarySearchCustom<T, U>(
-  arr: T[] | ReadonlyArray<T[]>,
+  arr: ReadonlyArray<T>,
   val: U,
   fn: (e: T, v: U, m?: number, arr?: T[]) => number,
   ths?: Function | null,

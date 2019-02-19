@@ -87,7 +87,7 @@ export namespace Impl {
    * @param begin
    */
   export function isInRange(
-    rangeList: number[][] | ReadonlyArray<number[][]>,
+    rangeList: ReadonlyArray<ReadonlyArray<number>>,
     pos: number,
     begin: number
   ): [boolean, number] {
@@ -106,7 +106,7 @@ export namespace Impl {
   export function listUpCodeBlockRangeMadeByIndentAndMerge(
     markdownText: string,
     lineEndList: number[],
-    codeBlockRange: number[][] | ReadonlyArray<number[][]>
+    codeBlockRange: ReadonlyArray<ReadonlyArray<number>>
   ): number[][] {
     let re: number[][] = [];
     let preLineEnd = 0;
