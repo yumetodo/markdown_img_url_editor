@@ -26,7 +26,6 @@
   "devDependencies": {
     "@types/deep-freeze": "^0.1.1",
     "@types/jest": "^24.0.6",
-    "deep-freeze": "0.0.1",
     "eslint": "^5.14.1",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-node": "^8.0.1",
@@ -41,6 +40,7 @@
     "verifiable-file-read-all-cache": "^1.1.0"
   },
   "dependencies": {
+    "deep-freeze": "0.0.1",
     "es-string-algorithm": "^1.0.1",
     "unicode": "^11.0.1"
   },

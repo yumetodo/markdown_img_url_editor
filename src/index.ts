@@ -1,6 +1,7 @@
 // import * as bs from '@extra-array/binary-search.closest';
 import { binarySearch as bs } from './binary-search.closest';
 import { Impl } from './impl';
+import deepFreeze from 'deep-freeze';
 /**
  * edit markdown img src
  * @param  markdownText markdown text
@@ -14,14 +15,16 @@ export async function markdownImgUrlEditor(
 ): Promise<string> {
   let strings: (number | string)[] = [];
   let promiseStrings: Promise<string>[] = [];
-  const lineEndList = Impl.listUpLineEnd(markdownText);
-  const codeBlockRangeList = Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
-    markdownText,
-    lineEndList,
-    Impl.listUpCodeBlockRange(markdownText, lineEndList)
+  const lineEndList = deepFreeze(Impl.listUpLineEnd(markdownText));
+  const codeBlockRangeList = deepFreeze(
+    Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
+      markdownText,
+      lineEndList,
+      Impl.listUpCodeBlockRange(markdownText, lineEndList)
+    )
   );
-  const paragraphList = Impl.listUpParagraphDelim(lineEndList, codeBlockRangeList);
-  const codeRangeList = Impl.listUpCodeRange(markdownText, paragraphList, codeBlockRangeList);
+  const paragraphList = deepFreeze(Impl.listUpParagraphDelim(lineEndList, codeBlockRangeList));
+  const codeRangeList = deepFreeze(Impl.listUpCodeRange(markdownText, paragraphList, codeBlockRangeList));
   let imageBlockBeginPos = 0,
     codeBlockRangeHintPos = 0,
     codeRangeHintPos = 0,
