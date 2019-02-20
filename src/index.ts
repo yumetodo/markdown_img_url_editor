@@ -88,6 +88,7 @@ export async function markdownImgUrlEditor(
     pre = imageBlockLastPosResult;
     promiseStrings.push(converter(markdownText.substring(imageBlockAltLastPosResult + 2, imageBlockLastPosResult)));
     strings.push(promiseStrings.length - 1);
+    imageBlockBeginPos = imageBlockLastPosResult + 1;
   }
   //append rest
   strings.push(markdownText.substring(pre));
