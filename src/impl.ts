@@ -126,7 +126,7 @@ export namespace Impl {
           pre = null;
         }
         // merge
-        if (0 !== re.length && re[re.length - 1][0] !== codeBlockRange[index][0]) {
+        if (0 === re.length || re[re.length - 1][0] !== codeBlockRange[index][0]) {
           re.push([codeBlockRange[index][0], codeBlockRange[index][1]]);
         }
         continue;
