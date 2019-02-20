@@ -1,5 +1,7 @@
 # markdown_img_url_editor
 
+[![NPM](https://nodei.co/npm/markdown_img_url_editor.png)](https://nodei.co/npm/markdown_img_url_editor/)
+
 [![Build Status](https://travis-ci.org/yumetodo/markdown_img_url_editor.svg?branch=master)](https://travis-ci.org/yumetodo/markdown_img_url_editor) [![Greenkeeper badge](https://badges.greenkeeper.io/yumetodo/markdown_img_url_editor.svg)](https://greenkeeper.io/)
 
 `![alt](I want to edit here!)`
