@@ -129,6 +129,7 @@ export namespace Impl {
         if (0 === re.length || re[re.length - 1][0] !== codeBlockRange[index][0]) {
           re.push([codeBlockRange[index][0], codeBlockRange[index][1]]);
         }
+        preLineEnd = lineEnd;
         continue;
       }
       if (
