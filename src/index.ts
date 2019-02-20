@@ -53,7 +53,9 @@ export async function markdownImgUrlEditor(
   };
   while (-1 != (imageBlockBeginPos = markdownText.indexOf('![', imageBlockBeginPos))) {
     if (skipCode(imageBlockBeginPos)) continue;
-    const lineEndPos = bs(lineEndList, imageBlockBeginPos);
+    const lineEndPosIndex = bs(lineEndList, imageBlockBeginPos);
+    if (-1 === lineEndPosIndex) continue;
+    const lineEndPos = lineEndList[lineEndPosIndex];
     /**
      * find, skip, happy!
      * @param pos
