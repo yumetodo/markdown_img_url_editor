@@ -121,6 +121,7 @@ export namespace Impl {
       hint = index;
       if (isCodeBlockRange) {
         prevIsInCodeBlock = true;
+        needNotToAppend = false;
         if (null !== pre) {
           re.push([pre, lineEnd - 1]);
           pre = null;
