@@ -7,7 +7,6 @@ const text2 = new TextCache(
 const forVerifier = (actual: string, expected: string) => expect(actual).toEqual(expected);
 describe('index', () => {
   it('parse', async () => {
-    //npm run test -- --testNamePattern "parse"
     await text2.verify(forVerifier);
     let re: string[] = [];
     await markdownImgUrlEditor(await text2.get(), s => {
@@ -19,5 +18,10 @@ describe('index', () => {
       'https://github.com/sindresorhus.png?size=100',
       'https://github.com/vadimdemedes.png?size=100',
     ]);
+  });
+  it('join', async () => {
+    await text2.verify(forVerifier);
+    const re = await markdownImgUrlEditor(await text2.get(), s => Promise.resolve(s));
+    expect(re).toEqual(await text2.get());
   });
 });
