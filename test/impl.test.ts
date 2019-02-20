@@ -81,9 +81,13 @@ sekai`;
   it('Impl.findNearestParagraphEndPos', async () => {
     await text2.verify(forVerifier);
     const text = await text2.get();
-    const lineEndList = Impl.listUpLineEnd(text);
-    const codeBlockByIndentRange = Impl.listUpCodeBlockRangeMadeByIndent(text, lineEndList);
-    const paragraphList = Impl.listUpParagraphDelim(lineEndList, codeBlockByIndentRange);
+    const lineEndList1 = Impl.listUpLineEnd(text);
+    const codeBlockByIndentRange = Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
+      text,
+      lineEndList1,
+      Impl.listUpCodeBlockRange(text, lineEndList1)
+    );
+    const paragraphList = Impl.listUpParagraphDelim(lineEndList1, codeBlockByIndentRange);
     const re1 = Impl.findNearestParagraphEndPos(paragraphList, 87, 0);
     expect(re1).toEqual([149, 3]);
     const re2 = Impl.findNearestParagraphEndPos(paragraphList, 176, re1[1]);
@@ -92,10 +96,14 @@ sekai`;
   it('Impl.listUpCodeRange', async () => {
     await text2.verify(forVerifier);
     const text = await text2.get();
-    const lineEndList = Impl.listUpLineEnd(text);
-    const codeBlockByIndentRange = Impl.listUpCodeBlockRangeMadeByIndent(text, lineEndList);
-    const paragraphList = Impl.listUpParagraphDelim(lineEndList, codeBlockByIndentRange);
-    const codeBlockRangeList = Impl.listUpCodeBlockRange(text, lineEndList);
+    const lineEndList1 = Impl.listUpLineEnd(text);
+    const codeBlockByIndentRange = Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
+      text,
+      lineEndList1,
+      Impl.listUpCodeBlockRange(text, lineEndList1)
+    );
+    const paragraphList = Impl.listUpParagraphDelim(lineEndList1, codeBlockByIndentRange);
+    const codeBlockRangeList = Impl.listUpCodeBlockRange(text, lineEndList1);
     const re1 = Impl.listUpCodeRange(text, paragraphList, codeBlockRangeList);
     expect(re1).toEqual([[77, 90]]);
   });
