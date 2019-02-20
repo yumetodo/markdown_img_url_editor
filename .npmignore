@@ -1,4 +1,6 @@
 test/
+src/
 .eslintcache
 .vscode/
+@types/
 .gitattributes

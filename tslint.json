@@ -2,7 +2,8 @@
   "rulesDirectory": [ "tslint-plugin-prettier" ],
   "linterOptions": {
     "exclude": [
-        "node_modules/**"
+        "node_modules/**",
+        "dist/**"
     ]
   },
   "rules": {
