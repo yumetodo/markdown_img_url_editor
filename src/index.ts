@@ -15,9 +15,12 @@ export async function markdownImgUrlEditor(
   let strings: (number | string)[] = [];
   let promiseStrings: Promise<string>[] = [];
   const lineEndList = Impl.listUpLineEnd(markdownText);
-  const codeBlockByIndentRange = Impl.listUpCodeBlockRangeMadeByIndent(markdownText, lineEndList);
-  const paragraphList = Impl.listUpParagraphDelim(lineEndList, codeBlockByIndentRange);
-  const codeBlockRangeList = Impl.listUpCodeBlockRange(markdownText, lineEndList);
+  const codeBlockRangeList = Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
+    markdownText,
+    lineEndList,
+    Impl.listUpCodeBlockRange(markdownText, lineEndList)
+  );
+  const paragraphList = Impl.listUpParagraphDelim(lineEndList, codeBlockRangeList);
   const codeRangeList = Impl.listUpCodeRange(markdownText, paragraphList, codeBlockRangeList);
   let imageBlockBeginPos = 0,
     codeBlockRangeHintPos = 0,
