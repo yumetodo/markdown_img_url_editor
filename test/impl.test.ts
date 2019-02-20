@@ -19,14 +19,6 @@ sekai`;
     '4d88c8cd6ce398bab08132caf377f5b6ddcde6e0d22e5416f0f98273a3bbc08d'
   );
   const forVerifier = (actual: string, expected: string) => expect(actual).toEqual(expected);
-  it('Impl.listUpCodeBlockByIndentRange', async () => {
-    await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
-    const text = await Promise.all([text2.get(), text3.get()]);
-    const re1 = Impl.listUpCodeBlockRangeMadeByIndent(text[0], Impl.listUpLineEnd(text[0]));
-    expect(re1).toEqual([]);
-    const re2 = Impl.listUpCodeBlockRangeMadeByIndent(text[1], Impl.listUpLineEnd(text[1]));
-    expect(re2).toEqual([[70, 84], [117, 139], [145, 178]]);
-  });
   it('Impl.listUpParagraphDelim', async () => {
     await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
     const text = await Promise.all([text2.get(), text3.get()]);
@@ -67,6 +59,24 @@ sekai`;
     const re2 = Impl.listUpCodeBlockRange(text[1], Impl.listUpLineEnd(text[1]));
     expect(re2).toEqual([[0, 18], [36, 64], [180, 213]]);
   });
+  it('Impl.listUpCodeBlockRangeMadeByIndentAndMerge', async () => {
+    await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
+    const text = await Promise.all([text2.get(), text3.get()]);
+    const lineEndList1 = Impl.listUpLineEnd(text[0]);
+    const beforeMerge: ReadonlyArray<ReadonlyArray<number>> = deepFreeze(
+      Impl.listUpCodeBlockRange(text[0], lineEndList1)
+    );
+    const beforeMergeLen = beforeMerge.length;
+    const re1 = Impl.listUpCodeBlockRangeMadeByIndentAndMerge(text[0], lineEndList1, beforeMerge);
+    expect(re1.length).toEqual(beforeMergeLen);
+    expect(re1).toEqual(beforeMerge);
+    const lineEndList2 = Impl.listUpLineEnd(text[1]);
+    const re2 = Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
+      text[1],
+      lineEndList2,
+      deepFreeze(Impl.listUpCodeBlockRange(text[1], lineEndList2))
+    );
+    expect(re2).toEqual([[0, 18], [36, 64], [70, 84], [117, 139], [145, 178], [180, 213], [215, 221]]);
   });
   it('Impl.findNearestParagraphEndPos', async () => {
     await text2.verify(forVerifier);
