@@ -23,7 +23,14 @@ sekai`;
     await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
     const text = await Promise.all([text2.get(), text3.get()]);
     const lineEndList1 = Impl.listUpLineEnd(text[0]);
-    const re1 = Impl.listUpParagraphDelim(lineEndList1, Impl.listUpCodeBlockRangeMadeByIndent(text[0], lineEndList1));
+    const re1 = Impl.listUpParagraphDelim(
+      lineEndList1,
+      Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
+        text[0],
+        lineEndList1,
+        Impl.listUpCodeBlockRange(text[0], lineEndList1)
+      )
+    );
     expect(re1).toEqual([
       [8, 9],
       [41, 42],
@@ -36,7 +43,14 @@ sekai`;
       [788, 789],
     ]);
     const lineEndList2 = Impl.listUpLineEnd(text[1]);
-    const re2 = Impl.listUpParagraphDelim(lineEndList2, Impl.listUpCodeBlockRangeMadeByIndent(text[1], lineEndList2));
+    const re2 = Impl.listUpParagraphDelim(
+      lineEndList2,
+      Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
+        text[1],
+        lineEndList2,
+        Impl.listUpCodeBlockRange(text[1], lineEndList2)
+      )
+    );
     expect(re2).toEqual([
       [25, 26],
       [34, 35],
@@ -48,6 +62,8 @@ sekai`;
       [140, 141],
       [143, 144],
       [179, 179],
+      [214, 214],
+      [222, 222],
     ]);
   });
   test('Impl.listUpCodeBlockRange', async () => {
