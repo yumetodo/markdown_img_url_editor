@@ -2,13 +2,14 @@
   "name": "markdown_img_url_editor",
   "version": "1.0.0",
   "description": "![alt](I want to edit here) ",
-  "main": "index.js",
-  "types": "./index.d.ts",
+  "main": "dest/index.js",
   "scripts": {
-    "test:ava": "ava --verbose",
-    "eslint": "eslint . --cache",
-    "eslint:fix": "eslint --fix . --cache",
-    "test": "npm-run-all -l --parallel test:* eslint"
+    "prepare": "tsc",
+    "build": "tsc",
+    "build:verbose": "tsc --traceResolution",
+    "test": "jest --verbose",
+    "lint": "tslint --project .",
+    "lint:fix": "tslint --fix --project ."
   },
   "repository": {
     "type": "git",
@@ -23,17 +24,38 @@
   "author": "yumetodo",
   "license": "BSL-1.0",
   "devDependencies": {
-    "ava": "^1.2.1",
-    "eslint": "^5.13.0",
+    "@types/deep-freeze": "^0.1.1",
+    "@types/jest": "^24.0.6",
+    "deep-freeze": "0.0.1",
+    "eslint": "^5.14.1",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "^3.0.1",
+    "jest": "^24.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "1.16.4",
-    "verifiable-file-read-all-cache": "^1.0.1"
+    "ts-jest": "^24.0.0",
+    "tslint": "^5.12.1",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.3.3",
+    "verifiable-file-read-all-cache": "^1.1.0"
   },
   "dependencies": {
-    "@extra-array/binary-search.closest": "^1.1.1",
-    "es-string-algorithm": "^1.0.0"
+    "es-string-algorithm": "^1.0.1",
+    "unicode": "^11.0.1"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }

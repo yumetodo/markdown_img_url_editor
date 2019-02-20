@@ -1,38 +1,43 @@
-const bs = require('@extra-array/binary-search.closest');
-const impl = require('./src/impl');
+// import * as bs from '@extra-array/binary-search.closest';
+import { binarySearch as bs } from './binary-search.closest';
+import { Impl } from './impl';
 /**
  * edit markdown img src
- * @param {string} markdownText markdown text
- * @param {(src: string)=>Promise<String>} converter acccept markdown img src and convert
- * @param {()=>Promise<void> | null | undefined} beforeCollectCallback called before collect convert result
- * @returns {string}
+ * @param  markdownText markdown text
+ * @param converter acccept markdown img src and convert
+ * @param beforeCollectCallback called before collect convert result
  */
-const markdownImgUrlEditor = async (markdownText, converter, beforeCollectCallback) => {
-  /** @types {(number | string)[]} */
-  let strings = [];
-  /** @types {Promise<string>[]} */
-  let promiseStrings = [];
-  const lineEndList = impl.listUpLineEnd(markdownText);
-  const paragraphList = impl.listUpParagraphDelim(lineEndList);
-  const codeBlockRangeList = impl.listUpCodeBlockRange(markdownText, lineEndList);
-  const codeRangeList = impl.listUpCodeRange(markdownText, paragraphList, codeBlockRangeList);
+export async function markdownImgUrlEditor(
+  markdownText: string,
+  converter: (src: string) => Promise<string>,
+  beforeCollectCallback: () => void
+): Promise<string> {
+  let strings: (number | string)[] = [];
+  let promiseStrings: Promise<string>[] = [];
+  const lineEndList = Impl.listUpLineEnd(markdownText);
+  const codeBlockRangeList = Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
+    markdownText,
+    lineEndList,
+    Impl.listUpCodeBlockRange(markdownText, lineEndList)
+  );
+  const paragraphList = Impl.listUpParagraphDelim(lineEndList, codeBlockRangeList);
+  const codeRangeList = Impl.listUpCodeRange(markdownText, paragraphList, codeBlockRangeList);
   let imageBlockBeginPos = 0,
     codeBlockRangeHintPos = 0,
     codeRangeHintPos = 0,
     pre = 0;
   /**
    * skip code tag
-   * @param {number} pos
-   * @returns {boolean}
+   * @param pos
    */
-  const skipCode = pos => {
-    const [inCodeBlockRange, index1] = impl.isInRange(codeBlockRangeList, pos, codeBlockRangeHintPos);
+  const skipCode = (pos: number): boolean => {
+    const [inCodeBlockRange, index1] = Impl.isInRange(codeBlockRangeList, pos, codeBlockRangeHintPos);
     if (inCodeBlockRange) {
       imageBlockBeginPos = codeBlockRangeList[index1][1] + 1;
       codeBlockRangeHintPos = index1 + 1;
       return true;
     }
-    const [inCodeRange, index2] = impl.isInRange(codeRangeList, pos, codeRangeHintPos);
+    const [inCodeRange, index2] = Impl.isInRange(codeRangeList, pos, codeRangeHintPos);
     if (inCodeRange) {
       imageBlockBeginPos = codeRangeList[index2][1] + 1;
       codeRangeHintPos = index2 + 1;
@@ -44,10 +49,10 @@ const markdownImgUrlEditor = async (markdownText, converter, beforeCollectCallba
     const lineEndPos = bs(lineEndList, imageBlockBeginPos);
     /**
      * find, skip, happy!
-     * @param {number} pos
-     * @param {string} searchStr
+     * @param pos
+     * @param searchStr
      */
-    const find = (pos, searchStr) => {
+    const find = (pos: number, searchStr: string) => {
       while (
         -1 !== (pos = markdownText.indexOf(searchStr, pos)) &&
         pos < lineEndPos &&
@@ -80,5 +85,4 @@ const markdownImgUrlEditor = async (markdownText, converter, beforeCollectCallba
   if (null != beforeCollectCallback) await beforeCollectCallback();
   const promiseResultStrings = await Promise.all(promiseStrings);
   return strings.map(e => (typeof e === 'number' ? promiseResultStrings[e] : e)).join('');
-};
-module.exports = markdownImgUrlEditor;
+}
