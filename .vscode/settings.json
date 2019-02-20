@@ -11,5 +11,6 @@
             "LightSkyBlue"
         ],
         "Red"
-    ]
+    ],
+    "eslint.enable": false
 }

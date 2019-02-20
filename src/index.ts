@@ -15,16 +15,20 @@ export async function markdownImgUrlEditor(
 ): Promise<string> {
   let strings: (number | string)[] = [];
   let promiseStrings: Promise<string>[] = [];
-  const lineEndList = deepFreeze(Impl.listUpLineEnd(markdownText));
-  const codeBlockRangeList = deepFreeze(
+  const lineEndList: ReadonlyArray<number> = deepFreeze(Impl.listUpLineEnd(markdownText));
+  const codeBlockRangeList: ReadonlyArray<ReadonlyArray<number>> = deepFreeze(
     Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
       markdownText,
       lineEndList,
       Impl.listUpCodeBlockRange(markdownText, lineEndList)
     )
   );
-  const paragraphList = deepFreeze(Impl.listUpParagraphDelim(lineEndList, codeBlockRangeList));
-  const codeRangeList = deepFreeze(Impl.listUpCodeRange(markdownText, paragraphList, codeBlockRangeList));
+  const paragraphList: ReadonlyArray<ReadonlyArray<number>> = deepFreeze(
+    Impl.listUpParagraphDelim(lineEndList, codeBlockRangeList)
+  );
+  const codeRangeList: ReadonlyArray<ReadonlyArray<number>> = deepFreeze(
+    Impl.listUpCodeRange(markdownText, paragraphList, codeBlockRangeList)
+  );
   let imageBlockBeginPos = 0,
     codeBlockRangeHintPos = 0,
     codeRangeHintPos = 0,
