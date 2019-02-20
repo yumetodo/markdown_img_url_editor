@@ -11,7 +11,7 @@ import deepFreeze from 'deep-freeze';
 export async function markdownImgUrlEditor(
   markdownText: string,
   converter: (src: string) => Promise<string>,
-  beforeCollectCallback: () => Promise<void>
+  beforeCollectCallback?: () => Promise<void>
 ): Promise<string> {
   let strings: (number | string)[] = [];
   let promiseStrings: Promise<string>[] = [];
