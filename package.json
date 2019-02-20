@@ -2,7 +2,7 @@
   "name": "markdown_img_url_editor",
   "version": "1.0.0",
   "description": "![alt](I want to edit here) ",
-  "main": "dest/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "prepare": "tsc",
     "build": "tsc",
