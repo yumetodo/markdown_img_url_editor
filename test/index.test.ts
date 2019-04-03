@@ -11,7 +11,7 @@ describe('index', () => {
     let re: string[] = [];
     await markdownImgUrlEditor(await text2.get(), s => {
       re.push(s);
-      return Promise.resolve(s);
+      return () => s;
     });
     expect(re).toEqual([
       'https://github.com/novemberborn.png?size=100',
@@ -21,7 +21,9 @@ describe('index', () => {
   });
   it('join', async () => {
     await text2.verify(forVerifier);
-    const re = await markdownImgUrlEditor(await text2.get(), s => Promise.resolve(s));
+    const re = await markdownImgUrlEditor(await text2.get(), s => {
+      return () => s;
+    });
     expect(re).toEqual(await text2.get());
   });
 });

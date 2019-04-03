@@ -2,6 +2,8 @@
 import { binarySearch as bs } from './binary-search.closest';
 import { Impl } from './impl';
 import deepFreeze from 'deep-freeze';
+
+type stringGeneratorType = () => string;
 /**
  * edit markdown img src
  * @param  markdownText markdown text
@@ -10,11 +12,11 @@ import deepFreeze from 'deep-freeze';
  */
 export async function markdownImgUrlEditor(
   markdownText: string,
-  converter: (src: string) => Promise<string>,
+  converter: (src: string) => stringGeneratorType,
   beforeCollectCallback?: () => Promise<void>
 ): Promise<string> {
   let strings: (number | string)[] = [];
-  let promiseStrings: Promise<string>[] = [];
+  let stringsGenerator: stringGeneratorType[] = [];
   const lineEndList: ReadonlyArray<number> = deepFreeze(Impl.listUpLineEnd(markdownText));
   const codeBlockRangeList: ReadonlyArray<ReadonlyArray<number>> = deepFreeze(
     Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
@@ -86,13 +88,13 @@ export async function markdownImgUrlEditor(
     //append before image URL
     strings.push(markdownText.substring(pre, imageBlockAltLastPosResult + 2));
     pre = imageBlockLastPosResult;
-    promiseStrings.push(converter(markdownText.substring(imageBlockAltLastPosResult + 2, imageBlockLastPosResult)));
-    strings.push(promiseStrings.length - 1);
+    stringsGenerator.push(converter(markdownText.substring(imageBlockAltLastPosResult + 2, imageBlockLastPosResult)));
+    strings.push(stringsGenerator.length - 1);
     imageBlockBeginPos = imageBlockLastPosResult + 1;
   }
   //append rest
   strings.push(markdownText.substring(pre));
   if (null != beforeCollectCallback) await beforeCollectCallback();
-  const promiseResultStrings = await Promise.all(promiseStrings);
+  const promiseResultStrings = stringsGenerator.map(g => g());
   return strings.map(e => (typeof e === 'number' ? promiseResultStrings[e] : e)).join('');
 }
