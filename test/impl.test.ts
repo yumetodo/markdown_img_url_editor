@@ -1,7 +1,7 @@
 import { Impl } from '../src/impl';
 import TextCache from 'verifiable-file-read-all-cache';
 import deepFreeze from 'deep-freeze';
-describe('impl', async () => {
+describe('impl', () => {
   const text1 = `arikitari
 na
 sekai`;
