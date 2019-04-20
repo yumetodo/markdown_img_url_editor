@@ -79,16 +79,16 @@ export async function markdownImgUrlEditor(
       }
       return pos;
     };
-    const imageBlockAltLastPosResult = find(imageBlockBeginPos + 2, '](');
-    if (null === imageBlockAltLastPosResult) continue;
-    if (-1 === imageBlockAltLastPosResult) break;
-    const imageBlockLastPosResult = find(imageBlockAltLastPosResult + 2, ')');
+    const imageBlockAltEndPosResult = find(imageBlockBeginPos + 2, '](');
+    if (null === imageBlockAltEndPosResult) continue;
+    if (-1 === imageBlockAltEndPosResult) break;
+    const imageBlockLastPosResult = find(imageBlockAltEndPosResult + 2, ')');
     if (null === imageBlockLastPosResult) continue;
     if (-1 === imageBlockLastPosResult) break;
     //append before image URL
-    strings.push(markdownText.substring(pre, imageBlockAltLastPosResult + 2));
+    strings.push(markdownText.substring(pre, imageBlockAltEndPosResult + 2));
     pre = imageBlockLastPosResult;
-    stringsGenerator.push(converter(markdownText.substring(imageBlockAltLastPosResult + 2, imageBlockLastPosResult)));
+    stringsGenerator.push(converter(markdownText.substring(imageBlockAltEndPosResult + 2, imageBlockLastPosResult)));
     strings.push(stringsGenerator.length - 1);
     imageBlockBeginPos = imageBlockLastPosResult + 1;
   }
