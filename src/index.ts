@@ -12,7 +12,7 @@ type stringGeneratorType = () => string;
  */
 export async function markdownImgUrlEditor(
   markdownText: string,
-  converter: (src: string) => stringGeneratorType,
+  converter: (alt: string, src: string) => stringGeneratorType,
   beforeCollectCallback?: () => Promise<void>
 ): Promise<string> {
   let strings: (number | string)[] = [];
@@ -79,18 +79,25 @@ export async function markdownImgUrlEditor(
       }
       return pos;
     };
-    const imageBlockAltEndPosResult = find(imageBlockBeginPos + 2, '](');
+    const imageBlockAltBeginPos = imageBlockBeginPos + 2;
+    const imageBlockAltEndPosResult = find(imageBlockAltBeginPos, '](');
     if (null === imageBlockAltEndPosResult) continue;
     if (-1 === imageBlockAltEndPosResult) break;
-    const imageBlockLastPosResult = find(imageBlockAltEndPosResult + 2, ')');
-    if (null === imageBlockLastPosResult) continue;
-    if (-1 === imageBlockLastPosResult) break;
+    const imageBlockSrcBeginPos = imageBlockAltEndPosResult + 2;
+    const imageBlockSrcEndPosResult = find(imageBlockSrcBeginPos, ')');
+    if (null === imageBlockSrcEndPosResult) continue;
+    if (-1 === imageBlockSrcEndPosResult) break;
     //append before image URL
-    strings.push(markdownText.substring(pre, imageBlockAltEndPosResult + 2));
-    pre = imageBlockLastPosResult;
-    stringsGenerator.push(converter(markdownText.substring(imageBlockAltEndPosResult + 2, imageBlockLastPosResult)));
+    strings.push(markdownText.substring(pre, imageBlockSrcBeginPos));
+    pre = imageBlockSrcEndPosResult;
+    stringsGenerator.push(
+      converter(
+        markdownText.substring(imageBlockAltBeginPos, imageBlockAltEndPosResult),
+        markdownText.substring(imageBlockSrcBeginPos, imageBlockSrcEndPosResult)
+      )
+    );
     strings.push(stringsGenerator.length - 1);
-    imageBlockBeginPos = imageBlockLastPosResult + 1;
+    imageBlockBeginPos = imageBlockSrcEndPosResult + 1;
   }
   //append rest
   strings.push(markdownText.substring(pre));

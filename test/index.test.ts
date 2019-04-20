@@ -8,20 +8,20 @@ const forVerifier = (actual: string, expected: string) => expect(actual).toEqual
 describe('index', () => {
   it('parse', async () => {
     await text2.verify(forVerifier);
-    let re: string[] = [];
-    await markdownImgUrlEditor(await text2.get(), s => {
-      re.push(s);
+    let re: string[][] = [];
+    await markdownImgUrlEditor(await text2.get(), (a, s) => {
+      re.push([a, s]);
       return () => s;
     });
     expect(re).toEqual([
-      'https://github.com/novemberborn.png?size=100',
-      'https://github.com/sindresorhus.png?size=100',
-      'https://github.com/vadimdemedes.png?size=100',
+      ['Mark Wubben', 'https://github.com/novemberborn.png?size=100'],
+      ['Sindre Sorhus', 'https://github.com/sindresorhus.png?size=100'],
+      ['Vadim Demedes', 'https://github.com/vadimdemedes.png?size=100'],
     ]);
   });
   it('join', async () => {
     await text2.verify(forVerifier);
-    const re = await markdownImgUrlEditor(await text2.get(), s => {
+    const re = await markdownImgUrlEditor(await text2.get(), (_, s) => {
       return () => s;
     });
     expect(re).toEqual(await text2.get());
