@@ -13,7 +13,9 @@ const markdownText = `hoge
 fuga`;
     const replaced = await markdownImgUrlEditor(
       markdownText,
-      s => {
+      (a, s) => {
+        //a: img
+        //s: /path/to/file
         return () => s;
       },
       async () => {
