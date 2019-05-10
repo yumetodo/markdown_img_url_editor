@@ -186,7 +186,12 @@ export namespace Impl {
         } else {
           re.push([pre, n]);
         }
-      } else if (pre + 1 == codeBlockRangeMerged[index][0] && re[re.length - 1][1] !== pre) {
+      } else if (
+        index < codeBlockRangeMerged.length &&
+        codeBlockRangeMerged[index].length === 2 &&
+        pre + 1 == codeBlockRangeMerged[index][0] &&
+        re[re.length - 1][1] !== pre
+      ) {
         re.push([pre, pre]);
         re.push([codeBlockRangeMerged[index][1] + 1, codeBlockRangeMerged[index][1] + 1]);
       }

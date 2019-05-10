@@ -18,10 +18,14 @@ sekai`;
     './test/input/text3.md',
     '4d88c8cd6ce398bab08132caf377f5b6ddcde6e0d22e5416f0f98273a3bbc08d'
   );
+  const text4 = new TextCache(
+    './test/input/text4.md',
+    '6018d975487d3e80fb481c654dfd88ee11667ca0404032e6de6bb9860c9ec78d'
+  );
   const forVerifier = (actual: string, expected: string) => expect(actual).toEqual(expected);
   it('Impl.listUpParagraphDelim', async () => {
-    await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
-    const text = await Promise.all([text2.get(), text3.get()]);
+    await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier), text4.verify(forVerifier)]);
+    const text = await Promise.all([text2.get(), text3.get(), text4.get()]);
     const lineEndList1 = Impl.listUpLineEnd(text[0]);
     const re1 = Impl.listUpParagraphDelim(
       lineEndList1,
@@ -65,6 +69,16 @@ sekai`;
       [214, 214],
       [222, 222],
     ]);
+    const lineEndList3 = Impl.listUpLineEnd(text[2]);
+    const re3 = Impl.listUpParagraphDelim(
+      lineEndList3,
+      Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
+        text[2],
+        lineEndList3,
+        Impl.listUpCodeBlockRange(text[2], lineEndList3)
+      )
+    );
+    expect(re3).toEqual([[11, 12], [24, 25], [53, 54], [89, 90], [125, 126], [140, 141]]);
   });
   test('Impl.listUpCodeBlockRange', async () => {
     await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
