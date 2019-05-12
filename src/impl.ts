@@ -1,11 +1,9 @@
 // import * as bs from '@extra-array/binary-search.closest';
 import { binarySearchCustom as bs } from './binary-search.closest';
-import Zs from 'unicode/category/Zs';
 import * as std from 'es-string-algorithm';
-const whiteSpace =
-  Object.entries(Zs)
-    .map((e: [string, typeof Zs[0]]) => e[1].symbol)
-    .join('') + '\u{0009}\u{000B}\u{000C}';
+//https://spec.commonmark.org/0.29/
+// A space is U+0020.
+const space = '\u{0020}';
 const recognizeAsCodeBlockIndentSpaceLen = 4;
 const recognizeAsCodeBlockBacktickLen = 3;
 export namespace Impl {
@@ -39,7 +37,7 @@ export namespace Impl {
     let beginPos: number | null = null;
     let prevBacktickLen: number | null = null;
     (() => {
-      const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, 0);
+      const spaceEndpos = std.findFirstNotOf(markdownText, space, 0);
       if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos) return;
       const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
       const backtickLen = backtickEndPos - spaceEndpos;
@@ -60,7 +58,7 @@ export namespace Impl {
         prevBacktickLen = null;
       }
       const lineFront = preLineEnd + 1;
-      const spaceEndpos = std.findFirstNotOf(markdownText, whiteSpace, lineFront);
+      const spaceEndpos = std.findFirstNotOf(markdownText, space, lineFront);
       if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos - lineFront) continue;
       const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
       const backtickLen = backtickEndPos - spaceEndpos;
@@ -69,7 +67,7 @@ export namespace Impl {
           beginPos = lineFront;
           prevBacktickLen = backtickLen;
         } else if (prevBacktickLen <= backtickLen) {
-          const mayBeLineEndPos = std.findFirstNotOf(markdownText, whiteSpace, backtickEndPos);
+          const mayBeLineEndPos = std.findFirstNotOf(markdownText, space, backtickEndPos);
           if (isLineEndChar(markdownText.charAt(mayBeLineEndPos))) {
             re.push([beginPos, mayBeLineEndPos - 1]);
             beginPos = null;
@@ -135,7 +133,7 @@ export namespace Impl {
       }
       if (
         (prevIsInCodeBlock || prevLineIsBlank || null !== pre || needNotToAppend) &&
-        lineFront + recognizeAsCodeBlockIndentSpaceLen <= std.findFirstNotOf(markdownText, whiteSpace, lineFront)
+        lineFront + recognizeAsCodeBlockIndentSpaceLen <= std.findFirstNotOf(markdownText, space, lineFront)
       ) {
         if (needNotToAppend) {
           re[re.length - 1][1] = lineEnd - 1;
@@ -150,7 +148,7 @@ export namespace Impl {
         }
         prevLineIsBlank = false;
       } else {
-        prevLineIsBlank = lineEnd === std.findFirstNotOf(markdownText, whiteSpace, lineFront);
+        prevLineIsBlank = lineEnd === std.findFirstNotOf(markdownText, space, lineFront);
         if (!prevLineIsBlank) needNotToAppend = false;
       }
       prevIsInCodeBlock = false;

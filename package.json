@@ -41,8 +41,7 @@
   },
   "dependencies": {
     "deep-freeze": "0.0.1",
-    "es-string-algorithm": "^1.0.1",
-    "unicode": "^11.0.1"
+    "es-string-algorithm": "^1.0.1"
   },
   "jest": {
     "transform": {
