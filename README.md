@@ -23,3 +23,14 @@ fuga`;
       }
     );
 ```
+
+## Known Issue
+
+Unclosed code blocks closed by the enclosing block quote or list item is currently not supported.
+
+    - Foo
+
+      > bar
+      >> foo
+      > ```
+      >> go
