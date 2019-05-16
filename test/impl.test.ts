@@ -1,10 +1,14 @@
 import { Impl } from '../src/impl';
 import TextCache from 'verifiable-file-read-all-cache';
 import deepFreeze from 'deep-freeze';
-describe('impl', () => {
-  const text1 = `arikitari
+const text1 = `arikitari
 na
 sekai`;
+const text6 = `~~~
+~~~ ggg
+~~~
+`;
+describe('impl', () => {
   it('Impl.listUpLineEnd', () => {
     const re = Impl.listUpLineEnd(text1);
     expect(re.length).toEqual(3);
@@ -21,6 +25,10 @@ sekai`;
   const text4 = new TextCache(
     './test/input/text4.md',
     '6018d975487d3e80fb481c654dfd88ee11667ca0404032e6de6bb9860c9ec78d'
+  );
+  const text5 = new TextCache(
+    './test/input/text5.md',
+    '42c2670609945557ad777c3b5db8618fca99557f92ed8b3ff4962a7771689d1c'
   );
   const forVerifier = (actual: string, expected: string) => expect(actual).toEqual(expected);
   it('Impl.listUpParagraphDelim', async () => {
@@ -81,13 +89,28 @@ sekai`;
     expect(re3).toEqual([[11, 12], [24, 25], [53, 54], [89, 90], [125, 126], [140, 141]]);
   });
   test('Impl.listUpCodeBlockRange', async () => {
-    await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);
-    const text = await Promise.all([text2.get(), text3.get()]);
+    await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier), text5.verify(forVerifier)]);
+    const text = await Promise.all([text2.get(), text3.get(), text5.get(), text6]);
     const lineEndList1 = Impl.listUpLineEnd(text[0]);
     const re1 = Impl.listUpCodeBlockRange(text[0], lineEndList1);
     expect(re1).toEqual([[43, 69], [151, 270], [303, 335]]);
     const re2 = Impl.listUpCodeBlockRange(text[1], Impl.listUpLineEnd(text[1]));
     expect(re2).toEqual([[0, 18], [36, 64], [180, 213]]);
+    const re3 = Impl.listUpCodeBlockRange(text[2], Impl.listUpLineEnd(text[2]));
+    expect(re3).toEqual([
+      [0, 11],
+      [14, 28],
+      [31, 45],
+      [48, 66],
+      [69, 85],
+      [88, 94],
+      [97, 109],
+      [112, 127],
+      [130, 144],
+      [147, 168],
+    ]);
+    const re4 = Impl.listUpCodeBlockRange(text[3], Impl.listUpLineEnd(text[3]));
+    expect(re4).toEqual([[0, 14]]);
   });
   it('Impl.listUpCodeBlockRangeMadeByIndentAndMerge', async () => {
     await Promise.all([text2.verify(forVerifier), text3.verify(forVerifier)]);

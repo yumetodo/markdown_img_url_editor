@@ -36,42 +36,61 @@ export namespace Impl {
     let re: number[][] = [];
     let beginPos: number | null = null;
     let prevBacktickLen: number | null = null;
+    let prevCodeFenceChar: string | null = null;
+    let prevCodeFenceEndPos: number | null = null;
     (() => {
       const spaceEndpos = std.findFirstNotOf(markdownText, space, 0);
       if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos) return;
-      const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
+      const backtickEndPos = std.findFirstNotOf(markdownText, '`~', spaceEndpos);
       const backtickLen = backtickEndPos - spaceEndpos;
       if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
+        if (backtickEndPos === std.findFirstNotOf(markdownText, '`', spaceEndpos)) {
+          prevCodeFenceChar = '`';
+        } else if (backtickEndPos === std.findFirstNotOf(markdownText, '~', spaceEndpos)) {
+          prevCodeFenceChar = '~';
+        }
         beginPos = 0;
         prevBacktickLen = backtickLen;
+        prevCodeFenceEndPos = spaceEndpos + backtickLen;
       }
     })();
     for (const preLineEnd of lineEndList) {
       if (0 !== re.length && preLineEnd <= re[re.length - 1][1]) continue;
       // skip code tag
-      if (
-        null != beginPos &&
-        null != prevBacktickLen &&
-        markdownText.indexOf('`'.repeat(prevBacktickLen), beginPos + prevBacktickLen) < preLineEnd
-      ) {
-        beginPos = null;
-        prevBacktickLen = null;
+      // detect like `a`
+      if (null != prevBacktickLen && null != prevCodeFenceEndPos && '`' === prevCodeFenceChar) {
+        const codeTagCloseBeginPos = markdownText.indexOf('`'.repeat(prevBacktickLen), prevCodeFenceEndPos);
+        if (-1 !== codeTagCloseBeginPos && codeTagCloseBeginPos < preLineEnd) {
+          beginPos = null;
+          prevBacktickLen = null;
+          prevCodeFenceChar = null;
+        }
+        prevCodeFenceEndPos = null;
       }
       const lineFront = preLineEnd + 1;
       const spaceEndpos = std.findFirstNotOf(markdownText, space, lineFront);
+      if (-1 === spaceEndpos) break;
       if (recognizeAsCodeBlockIndentSpaceLen <= spaceEndpos - lineFront) continue;
-      const backtickEndPos = std.findFirstNotOf(markdownText, '`', spaceEndpos);
+      const backtickEndPos = std.findFirstNotOf(markdownText, prevCodeFenceChar || '`~', spaceEndpos);
       const backtickLen = backtickEndPos - spaceEndpos;
       if (recognizeAsCodeBlockBacktickLen <= backtickLen) {
         if (null === beginPos || null === prevBacktickLen) {
+          if (backtickEndPos === std.findFirstNotOf(markdownText, '`', spaceEndpos)) {
+            prevCodeFenceChar = '`';
+          } else if (backtickEndPos === std.findFirstNotOf(markdownText, '~', spaceEndpos)) {
+            prevCodeFenceChar = '~';
+          }
           beginPos = lineFront;
           prevBacktickLen = backtickLen;
+          prevCodeFenceEndPos = spaceEndpos + backtickLen;
         } else if (prevBacktickLen <= backtickLen) {
           const mayBeLineEndPos = std.findFirstNotOf(markdownText, space, backtickEndPos);
           if (isLineEndChar(markdownText.charAt(mayBeLineEndPos))) {
             re.push([beginPos, mayBeLineEndPos - 1]);
             beginPos = null;
             prevBacktickLen = null;
+            prevCodeFenceChar = null;
+            prevCodeFenceEndPos = null;
           }
         }
       }
