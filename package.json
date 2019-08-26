@@ -24,24 +24,24 @@
   "author": "yumetodo",
   "license": "BSL-1.0",
   "devDependencies": {
-    "@types/deep-freeze": "^0.1.1",
-    "@types/jest": "^24.0.12",
-    "eslint": "^6.0.0",
-    "eslint-config-prettier": "^4.2.0",
-    "eslint-plugin-node": "^9.0.1",
-    "eslint-plugin-prettier": "^3.0.1",
-    "jest": "^24.8.0",
+    "@types/deep-freeze": "^0.1.2",
+    "@types/jest": "^24.0.18",
+    "eslint": "^6.2.2",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "jest": "^24.9.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "1.18.1",
+    "prettier": "1.18.2",
     "ts-jest": "^24.0.2",
-    "tslint": "^5.16.0",
+    "tslint": "^5.19.0",
     "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^3.4.5",
+    "typescript": "^3.5.3",
     "verifiable-file-read-all-cache": "^1.1.0"
   },
   "dependencies": {
     "deep-freeze": "0.0.1",
-    "es-string-algorithm": "^1.0.1"
+    "es-string-algorithm": "^1.0.2"
   },
   "jest": {
     "transform": {
