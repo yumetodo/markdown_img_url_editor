@@ -1,9 +1,12 @@
-import { MarkdownImgUrlEditor as Base } from '../markdown_img_url_editor_rust/pkg/markdown_img_url_editor_rust';
-const MarkdownImgUrlEditorBase = import('../markdown_img_url_editor_rust/pkg/markdown_img_url_editor_rust');
+const MarkdownImgUrlEditorBase = import('../markdown_img_url_editor_rust/pkg/index');
 type stringGeneratorType = () => string;
-export class MarkdownImgUrlEditor {
-  private base: Base;
-  private constructor(base: Base) {
+interface MarkdownImgUrlEditorBaseRequires {
+  replace(): string;
+  free(): void;
+}
+export class MarkdownImgUrlEditor<BaseType extends MarkdownImgUrlEditorBaseRequires> {
+  private base: BaseType;
+  private constructor(base: BaseType) {
     this.base = base;
   }
   /**
@@ -15,10 +18,7 @@ export class MarkdownImgUrlEditor {
    * @param text markdown text
    * @param converter should acccept markdown img alt and src, and return function which returns replaced string
    */
-  public static async init(
-    text: string,
-    converter: (alt: string, src: string) => stringGeneratorType
-  ): Promise<MarkdownImgUrlEditor> {
+  public static async init(text: string, converter: (alt: string, src: string) => stringGeneratorType) {
     const base = await MarkdownImgUrlEditorBase;
     return new MarkdownImgUrlEditor(new base.MarkdownImgUrlEditor(text, converter));
   }
