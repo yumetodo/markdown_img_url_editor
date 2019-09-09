@@ -4,8 +4,8 @@
   "description": "![alt](I want to edit here) ",
   "main": "dist/index.js",
   "scripts": {
-    "prepare": "webpack --mode production",
-    "webpack": "webpack --mode development",
+    "build:release": "webpack --mode production",
+    "build": "webpack --mode development",
     "webpack-dev": "webpack --mode development --watch",
     "test": "jest --verbose",
     "lint": "eslint --ext .ts .",
