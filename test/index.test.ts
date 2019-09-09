@@ -1,4 +1,5 @@
 import { MarkdownImgUrlEditor } from '../dist/index';
+import MarkdownIt from 'markdown-it';
 import TextCache from 'verifiable-file-read-all-cache';
 const text2 = new TextCache(
   './test/input/text2.md',
@@ -20,11 +21,12 @@ describe('index', () => {
       ['Vadim Demedes', 'https://github.com/vadimdemedes.png?size=100'],
     ]);
   });
-  // it('join', async () => {
-  //   await text2.verify(forVerifier);
-  //   const re = await markdownImgUrlEditor(await text2.get(), (_, s) => {
-  //     return () => s;
-  //   });
-  //   expect(re).toEqual(await text2.get());
-  // });
+  it('join', async () => {
+    await text2.verify(forVerifier);
+    const markdownImgUrlEditor = await MarkdownImgUrlEditor.init(await text2.get(), (_, s) => {
+      return () => s;
+    });
+    const md = new MarkdownIt();
+    expect(md.render(markdownImgUrlEditor.replace())).toEqual(md.render(await text2.get()));
+  });
 });
