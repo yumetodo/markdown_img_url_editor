@@ -29,7 +29,7 @@ export class MarkdownImgUrlEditor<BaseType extends MarkdownImgUrlEditorBaseRequi
    *
    * We use [pulldown-cmark](https://crates.io/crates/pulldown-cmark)(rust libary) to parse.
    *
-   * We use [pulldown-cmark-to-cmark](https://crates.io/crates/pulldown-cmark-to-cmark)(rust libary) to parse.
+   * We use [pulldown-cmark-to-cmark](https://crates.io/crates/pulldown-cmark-to-cmark)(rust libary) to replace.
    */
   public replace(): string {
     return this.base.replace();
