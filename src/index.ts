@@ -1,107 +1,43 @@
-// import * as bs from '@extra-array/binary-search.closest';
-import { binarySearch as bs } from './binary-search.closest';
-import { Impl } from './impl';
-import deepFreeze from 'deep-freeze';
-
+const MarkdownImgUrlEditorBase = import('../markdown_img_url_editor_rust/pkg/index');
 type stringGeneratorType = () => string;
-/**
- * edit markdown img src
- * @param  markdownText markdown text
- * @param converter acccept markdown img src and convert
- * @param beforeCollectCallback called before collect convert result
- */
-export async function markdownImgUrlEditor(
-  markdownText: string,
-  converter: (alt: string, src: string) => stringGeneratorType,
-  beforeCollectCallback?: () => Promise<void>
-): Promise<string> {
-  let strings: (number | string)[] = [];
-  let stringsGenerator: stringGeneratorType[] = [];
-  const lineEndList: ReadonlyArray<number> = deepFreeze(Impl.listUpLineEnd(markdownText));
-  const codeBlockRangeList: ReadonlyArray<ReadonlyArray<number>> = deepFreeze(
-    Impl.listUpCodeBlockRangeMadeByIndentAndMerge(
-      markdownText,
-      lineEndList,
-      Impl.listUpCodeBlockRange(markdownText, lineEndList)
-    )
-  );
-  const paragraphList: ReadonlyArray<ReadonlyArray<number>> = deepFreeze(
-    Impl.listUpParagraphDelim(lineEndList, codeBlockRangeList)
-  );
-  const codeRangeList: ReadonlyArray<ReadonlyArray<number>> = deepFreeze(
-    Impl.listUpCodeRange(markdownText, paragraphList, codeBlockRangeList)
-  );
-  let imageBlockBeginPos = 0,
-    codeBlockRangeHintPos = 0,
-    codeRangeHintPos = 0,
-    pre = 0;
-  /**
-   * skip code tag
-   * @param pos
-   */
-  const skipCode = (pos: number): boolean => {
-    const [inCodeBlockRange, index1] = Impl.isInRange(codeBlockRangeList, pos, codeBlockRangeHintPos);
-    if (inCodeBlockRange) {
-      imageBlockBeginPos = codeBlockRangeList[index1][1] + 1;
-      codeBlockRangeHintPos = index1 + 1;
-      return true;
-    }
-    const [inCodeRange, index2] = Impl.isInRange(codeRangeList, pos, codeRangeHintPos);
-    if (inCodeRange) {
-      imageBlockBeginPos = codeRangeList[index2][1] + 1;
-      codeRangeHintPos = index2 + 1;
-    }
-    return inCodeRange;
-  };
-  while (-1 != (imageBlockBeginPos = markdownText.indexOf('![', imageBlockBeginPos))) {
-    if (skipCode(imageBlockBeginPos)) continue;
-    const lineEndPosIndex = bs(lineEndList, imageBlockBeginPos);
-    if (-1 === lineEndPosIndex) continue;
-    const lineEndPos = lineEndList[lineEndPosIndex];
-    /**
-     * find, skip, happy!
-     * @param pos
-     * @param searchStr
-     */
-    const find = (pos: number, searchStr: string) => {
-      while (
-        -1 !== (pos = markdownText.indexOf(searchStr, pos)) &&
-        pos < lineEndPos &&
-        '\\' === markdownText.charAt(pos)
-      );
-      if (-1 === pos) {
-        return pos;
-      }
-      if (skipCode(pos)) return null;
-      if (lineEndPos <= pos) {
-        imageBlockBeginPos = lineEndPos + 1;
-        return null;
-      }
-      return pos;
-    };
-    const imageBlockAltBeginPos = imageBlockBeginPos + 2;
-    const imageBlockAltEndPosResult = find(imageBlockAltBeginPos, '](');
-    if (null === imageBlockAltEndPosResult) continue;
-    if (-1 === imageBlockAltEndPosResult) break;
-    const imageBlockSrcBeginPos = imageBlockAltEndPosResult + 2;
-    const imageBlockSrcEndPosResult = find(imageBlockSrcBeginPos, ')');
-    if (null === imageBlockSrcEndPosResult) continue;
-    if (-1 === imageBlockSrcEndPosResult) break;
-    //append before image URL
-    strings.push(markdownText.substring(pre, imageBlockSrcBeginPos));
-    pre = imageBlockSrcEndPosResult;
-    stringsGenerator.push(
-      converter(
-        markdownText.substring(imageBlockAltBeginPos, imageBlockAltEndPosResult),
-        markdownText.substring(imageBlockSrcBeginPos, imageBlockSrcEndPosResult)
-      )
-    );
-    strings.push(stringsGenerator.length - 1);
-    imageBlockBeginPos = imageBlockSrcEndPosResult + 1;
+interface MarkdownImgUrlEditorBaseRequires {
+  replace(): string;
+  free(): void;
+}
+export class MarkdownImgUrlEditor<BaseType extends MarkdownImgUrlEditorBaseRequires> {
+  private base: BaseType;
+  private constructor(base: BaseType) {
+    this.base = base;
   }
-  //append rest
-  strings.push(markdownText.substring(pre));
-  if (null != beforeCollectCallback) await beforeCollectCallback();
-  const promiseResultStrings = stringsGenerator.map(g => g());
-  return strings.map(e => (typeof e === 'number' ? promiseResultStrings[e] : e)).join('');
+  /**
+   * parse markdown and find img syntax
+   *
+   * **DO NOT FORGET CALLING `free()`**
+   *
+   * We use [pulldown-cmark](https://crates.io/crates/pulldown-cmark)(rust libary) to parse.
+   * @param text markdown text
+   * @param converter should acccept markdown img alt and src, and return function which returns replaced string
+   */
+  public static async init(text: string, converter: (alt: string, src: string) => stringGeneratorType) {
+    const base = await MarkdownImgUrlEditorBase;
+    return new MarkdownImgUrlEditor(new base.MarkdownImgUrlEditor(text, converter));
+  }
+  /**
+   * execute function returned by converter and replace markdown img url
+   *
+   * Because of the rust-lang lifetime checker limitation, actually, markdown text will be parsed again.
+   *
+   * We use [pulldown-cmark](https://crates.io/crates/pulldown-cmark)(rust libary) to parse.
+   *
+   * We use [pulldown-cmark-to-cmark](https://crates.io/crates/pulldown-cmark-to-cmark)(rust libary) to replace.
+   */
+  public replace(): string {
+    return this.base.replace();
+  }
+  /**
+   * You must call `free()` after you use
+   */
+  public free() {
+    this.base.free();
+  }
 }

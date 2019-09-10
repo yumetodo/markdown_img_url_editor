@@ -1,4 +1,5 @@
-import { markdownImgUrlEditor } from '../src/index';
+import { MarkdownImgUrlEditor } from '../dist/index';
+import MarkdownIt from 'markdown-it';
 import TextCache from 'verifiable-file-read-all-cache';
 const text2 = new TextCache(
   './test/input/text2.md',
@@ -8,11 +9,12 @@ const forVerifier = (actual: string, expected: string) => expect(actual).toEqual
 describe('index', () => {
   it('parse', async () => {
     await text2.verify(forVerifier);
-    let re: string[][] = [];
-    await markdownImgUrlEditor(await text2.get(), (a, s) => {
+    const re: string[][] = [];
+    const markdownImgUrlEditor = await MarkdownImgUrlEditor.init(await text2.get(), (a, s) => {
       re.push([a, s]);
       return () => s;
     });
+    markdownImgUrlEditor.free();
     expect(re).toEqual([
       ['Mark Wubben', 'https://github.com/novemberborn.png?size=100'],
       ['Sindre Sorhus', 'https://github.com/sindresorhus.png?size=100'],
@@ -21,9 +23,10 @@ describe('index', () => {
   });
   it('join', async () => {
     await text2.verify(forVerifier);
-    const re = await markdownImgUrlEditor(await text2.get(), (_, s) => {
+    const markdownImgUrlEditor = await MarkdownImgUrlEditor.init(await text2.get(), (_, s) => {
       return () => s;
     });
-    expect(re).toEqual(await text2.get());
+    const md = new MarkdownIt();
+    expect(md.render(markdownImgUrlEditor.replace())).toEqual(md.render(await text2.get()));
   });
 });
