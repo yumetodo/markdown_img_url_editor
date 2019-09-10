@@ -7,7 +7,7 @@
 `![alt](I want to edit here!)`
 
 ```typescript
-import { markdownImgUrlEditor } from 'markdown_img_url_editor';
+import { MarkdownImgUrlEditor } from 'markdown_img_url_editor';
 const markdownText = `hoge
 ![img](/path/to/file)
 fuga`;
