@@ -52,14 +52,17 @@ jobs:
             - run: npm run build:release
             - run: npm test
             - cargo_save_cache
+            - persist_to_workspace:
+                root: ~/repo
+                paths:
+                    - dist
+                    - node_modules
     publish:
         executor: default
         steps:
             - tool_install
-            - npm_install
-            - cargo_restore_cache
-            - run: npm run build:release
-            - cargo_save_cache
+            - attach_workspace:
+                at: ~/repo
             - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
             - run:
                 command: |
