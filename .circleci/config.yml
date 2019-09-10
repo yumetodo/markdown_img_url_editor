@@ -19,7 +19,7 @@ commands:
                 key: v1-dependencies-{{ checksum "package.json" }}
     tool_install:
         steps:
-            - run: sudo npm i -g can-npm-publish
+            - run: npm i -g can-npm-publish
     cargo_restore_cache:
         steps:
             - run:
@@ -70,26 +70,13 @@ jobs:
                     fi
 workflows:
     version: 2
-    build_and_test:
-      jobs:
-        - test
     publishflow:
         jobs:
-            - test:
-                context: npm
-                filters:
-                    branches:
-                        only:
-                            - master
-                    tags:
-                        only: /^v.*/
+            - test
             - publish:
                 context: npm
                 requires:
                     - test
                 filters:
-                    branches:
-                        only:
-                            - master
                     tags:
                         only: /^v.*/
