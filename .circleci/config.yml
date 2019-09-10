@@ -81,6 +81,8 @@ workflows:
                     branches:
                         only:
                             - master
+                    tags:
+                        only: /^v.*/
             - publish:
                 context: npm
                 requires:
@@ -89,3 +91,5 @@ workflows:
                     branches:
                         only:
                             - master
+                    tags:
+                        only: /^v.*/
