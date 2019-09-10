@@ -7,7 +7,6 @@ executors:
 commands:
     npm_install:
         steps:
-            - checkout
             - restore_cache:
                 keys:
                     - v1-dependencies-{{ checksum "package.json" }}
@@ -45,6 +44,7 @@ jobs:
     test:
         executor: default
         steps:
+            - checkout
             - npm_install
             - cargo_restore_cache
             - run: npm run build
@@ -56,17 +56,18 @@ jobs:
                 root: ~/repo
                 paths:
                     - dist
-                    - node_modules
     publish:
         executor: default
         steps:
             - tool_install
+            - checkout
             - attach_workspace:
                 at: ~/repo
+            - run: npm ci
             - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
             - run:
                 command: |
-                    if can-npm-publish; then
+                    if can-npm-publish --verbose; then
                         npm publish
                     else
                         echo "publish skipped"
