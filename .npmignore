@@ -4,4 +4,6 @@ src/
 .vscode/
 @types/
 .gitattributes
-.travis.yml
+.circleci/
+markdown_img_url_editor_rust/
+pkg/
