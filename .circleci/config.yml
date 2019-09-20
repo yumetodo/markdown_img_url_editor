@@ -7,7 +7,7 @@ executors:
 commands:
     tool_install:
         steps:
-            - run: npm i -g can-npm-publish
+            - run: sudo npm i -g can-npm-publish
 jobs:
     test:
         executor: default
