@@ -1,4 +1,4 @@
-import { MarkdownImgUrlEditor } from '../dist/index';
+import { MarkdownImgUrlEditor } from '../src/index';
 import MarkdownIt from 'markdown-it';
 import TextCache from 'verifiable-file-read-all-cache';
 const text2 = new TextCache(

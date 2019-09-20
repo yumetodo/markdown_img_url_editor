@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "module": "esnext",
-    "target": "es2017",
+		"module": "commonjs",
+		"target": "es6",
+    "outDir": "dist",
+		"lib": [
+			"es6"
+		],
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"allowSyntheticDefaultImports": true,
+    "rootDir": "src",
     "declaration": true,
-    "strictNullChecks": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["@types/*"]
-    },
-    "esModuleInterop": true
+    "strict": true   /* enable all strict type-checking options */
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src"]
+  // "exclude": ["node_modules", "test", "dist"]
 }

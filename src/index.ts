@@ -1,4 +1,4 @@
-const MarkdownImgUrlEditorBase = import('../markdown_img_url_editor_rust/pkg/index');
+const MarkdownImgUrlEditorBase = import('markdown_img_url_editor_rust');
 type stringGeneratorType = () => string;
 interface MarkdownImgUrlEditorBaseRequires {
   replace(): string;
