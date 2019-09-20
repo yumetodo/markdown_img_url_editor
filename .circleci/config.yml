@@ -19,39 +19,14 @@ commands:
     tool_install:
         steps:
             - run: npm i -g can-npm-publish
-    cargo_restore_cache:
-        steps:
-            - run:
-                name: Calculate dependencies
-                command: cargo generate-lockfile
-                working_directory: markdown_img_url_editor_rust
-            - restore_cache:
-                keys:
-                  - v4-cargo-cache-{{ arch }}-{{ checksum "markdown_img_url_editor_rust/Cargo.lock" }}
-    cargo_save_cache:
-        steps:
-            - save_cache:
-                paths:
-                  - /usr/local/cargo/registry
-                  - markdown_img_url_editor_rust/target/debug/.fingerprint
-                  - markdown_img_url_editor_rust/target/debug/build
-                  - markdown_img_url_editor_rust/target/debug/deps
-                  - markdown_img_url_editor_rust/target/release/.fingerprint
-                  - markdown_img_url_editor_rust/target/release/build
-                  - markdown_img_url_editor_rust/target/release/deps
-                key: v4-cargo-cache-{{ arch }}-{{ checksum "markdown_img_url_editor_rust/Cargo.lock" }}
 jobs:
     test:
         executor: default
         steps:
             - checkout
             - npm_install
-            - cargo_restore_cache
             - run: npm run build
             - run: npm test
-            - run: npm run build:release
-            - run: npm test
-            - cargo_save_cache
             - persist_to_workspace:
                 root: ~/repo
                 paths:
