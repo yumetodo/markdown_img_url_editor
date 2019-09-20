@@ -1,6 +1,6 @@
 {
   "name": "markdown_img_url_editor",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "![alt](I want to edit here) ",
   "main": "dist/index.js",
   "scripts": {
