@@ -54,6 +54,6 @@
     ]
   },
   "dependencies": {
-    "markdown_img_url_editor_rust": "^1.0.0"
+    "markdown_img_url_editor_rust": "^1.0.1"
   }
 }
