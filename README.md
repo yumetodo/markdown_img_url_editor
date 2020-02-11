@@ -2,7 +2,7 @@
 
 [![NPM](https://nodei.co/npm/markdown_img_url_editor.png)](https://nodei.co/npm/markdown_img_url_editor/)
 
-[![CircleCI](https://circleci.com/gh/yumetodo/markdown_img_url_editor/tree/master.svg?style=svg)](https://circleci.com/gh/yumetodo/markdown_img_url_editor/tree/master)
+[![CircleCI](https://circleci.com/gh/yumetodo/markdown_img_url_editor/tree/master.svg?style=svg)](https://circleci.com/gh/yumetodo/markdown_img_url_editor/tree/master) [![Greenkeeper badge](https://badges.greenkeeper.io/yumetodo/markdown_img_url_editor.svg)](https://greenkeeper.io/)
 
 `![alt](I want to edit here!)`
 
