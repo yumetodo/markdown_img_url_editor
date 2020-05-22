@@ -1,5 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const MarkdownImgUrlEditorBase = import('markdown_img_url_editor_rust');
-type stringGeneratorType = () => string;
+type StringGeneratorType = () => string;
 interface MarkdownImgUrlEditorBaseRequires {
   replace(): string;
   free(): void;
@@ -9,6 +10,7 @@ export class MarkdownImgUrlEditor<BaseType extends MarkdownImgUrlEditorBaseRequi
   private constructor(base: BaseType) {
     this.base = base;
   }
+  /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
   /**
    * parse markdown and find img syntax
    *
@@ -18,10 +20,12 @@ export class MarkdownImgUrlEditor<BaseType extends MarkdownImgUrlEditorBaseRequi
    * @param text markdown text
    * @param converter should acccept markdown img alt and src, and return function which returns replaced string
    */
-  public static async init(text: string, converter: (alt: string, src: string) => stringGeneratorType) {
+  public static async init(text: string, converter: (alt: string, src: string) => StringGeneratorType) {
     const base = await MarkdownImgUrlEditorBase;
     return new MarkdownImgUrlEditor(new base.MarkdownImgUrlEditor(text, converter));
   }
+  /* eslint-enable @typescript-eslint/explicit-module-boundary-types */
+
   /**
    * execute function returned by converter and replace markdown img url
    *
@@ -37,7 +41,7 @@ export class MarkdownImgUrlEditor<BaseType extends MarkdownImgUrlEditorBaseRequi
   /**
    * You must call `free()` after you use
    */
-  public free() {
+  public free(): void {
     this.base.free();
   }
 }
