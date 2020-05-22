@@ -22,7 +22,6 @@
   "author": "yumetodo",
   "license": "BSL-1.0",
   "devDependencies": {
-    "@types/deep-freeze": "^0.1.2",
     "@types/jest": "^25.2.2",
     "@types/markdown-it": "^10.0.1",
     "@types/punycode": "^2.1.0",
