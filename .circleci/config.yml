@@ -13,9 +13,28 @@ jobs:
         executor: default
         steps:
             - checkout
+            - restore_cache:
+                key: node_modules-2-{{ checksum "package.json" }}-{{ checksum "package-lock.json"}}
             - run: npm ci
-            - run: npm run build
-            - run: npm test
+            - save_cache:
+                paths:
+                    - $HOME/.npm
+                key: node_modules-2-{{ checksum "package.json" }}-{{ checksum "package-lock.json"}}
+            # ログディレクトリの作成
+            - run:
+                command: |
+                    mkdir -p results
+                    mkdir -p results/eslint
+            - run:
+                name: eslint
+                command: npm run lint -- --format=html -o ./results/eslint/eslint.html
+            - run:
+                name: Run tests
+                command: npm test -- --ci --runInBand
+            - store_test_results:
+                path: results
+            - store_artifacts:
+                path: results
             - persist_to_workspace:
                 root: ~/repo
                 paths:
