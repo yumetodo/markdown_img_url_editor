@@ -1,3 +1,9 @@
+/*=============================================================================
+  Copyright (C) 2019-2020 DxLibEx project
+  https://github.com/yumetodo/markdown_img_url_editor
+  Distributed under the Boost Software License, Version 1.0.
+  (See https://www.boost.org/LICENSE_1_0.txt)
+=============================================================================*/
 import { MarkdownImgUrlEditor } from '../src/index';
 import MarkdownIt from 'markdown-it';
 import TextCache from 'verifiable-file-read-all-cache';
