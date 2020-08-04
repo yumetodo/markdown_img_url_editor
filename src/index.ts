@@ -1,5 +1,5 @@
 /*=============================================================================
-  Copyright (C) 2019-2020 DxLibEx project
+  Copyright (C) 2019-2020 yumetodo <yume-wikijp@live.jp>
   https://github.com/yumetodo/markdown_img_url_editor
   Distributed under the Boost Software License, Version 1.0.
   (See https://www.boost.org/LICENSE_1_0.txt)
