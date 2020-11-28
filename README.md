@@ -23,51 +23,5 @@ fuga`;
 
 We use [pulldown-cmark](https://crates.io/crates/pulldown-cmark)(rust libary) to parse.
 
-We use [pulldown-cmark-to-cmark](https://crates.io/crates/pulldown-cmark-to-cmark)(rust libary) to replace.
-
-## Known Issue
-
-Because of [pulldown-cmark-to-cmark](https://crates.io/crates/pulldown-cmark-to-cmark) limitation, all code block will be replaced like below:
-
-`before`:
-
-    ```typescript
-    console.log("arikitari na sekai");
-    ```
-
-`after`:
-
-    ````typescript
-    console.log("arikitari na sekai");
-    ````
-
-Almost all cases, that is no problem because HTML converted result will be equal.
-
-However, in some cases, the replaced result will be broken.
-
-`before`:
-
-``````markdown
-`````markdown
-````markdown
-```typescript
-console.log("arikitari na sekai");
-```
-````
-`````
-``````
-
-`after`:
-
-    ````markdown
-    ````markdown
-    ```typescript
-    console.log("arikitari na sekai");
-    ```
-    ````
-    ````
-
-
-
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fyumetodo%2Fmarkdown_img_url_editor.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fyumetodo%2Fmarkdown_img_url_editor?ref=badge_large)
