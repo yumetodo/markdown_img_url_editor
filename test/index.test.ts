@@ -5,7 +5,6 @@
   (See https://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
 import { MarkdownImgUrlEditor } from '../src/index';
-import MarkdownIt from 'markdown-it';
 import TextCache from 'verifiable-file-read-all-cache';
 const text2 = new TextCache(
   './test/input/text2.md',
@@ -32,7 +31,6 @@ describe('index', () => {
     const markdownImgUrlEditor = await MarkdownImgUrlEditor.init(await text2.get(), (_, s) => {
       return () => s;
     });
-    const md = new MarkdownIt();
-    expect(md.render(markdownImgUrlEditor.replace())).toEqual(md.render(await text2.get()));
+    expect(markdownImgUrlEditor.replace()).toEqual(await text2.get());
   });
 });
