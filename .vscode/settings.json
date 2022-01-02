@@ -1,24 +1,11 @@
 {
-    "files.eol": "\n",
-    "bracketPairColorizer.consecutivePairColors": [
-        "()",
-        "[]",
-        "{}",
-        "<>",
-        [
-            "Gold",
-            "Orchid",
-            "LightSkyBlue"
-        ],
-        "Red"
-    ],
-    "tslint.enable": false,
-    "eslint.enable": true,
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        { "language": "typescript", "autoFix": true },
-        { "language": "typescriptreact", "autoFix": true }
-    ],
-
+  "files.eol": "\n",
+  "tslint.enable": false,
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ]
 }

@@ -5,7 +5,7 @@
   (See https://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const MarkdownImgUrlEditorBase = import('markdown_img_url_editor_rust');
+const MarkdownImgUrlEditorBase = import("markdown_img_url_editor_rust");
 type StringGeneratorType = () => string;
 interface MarkdownImgUrlEditorBaseRequires {
   replace(): string;
