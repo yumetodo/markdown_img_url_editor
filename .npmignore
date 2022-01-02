@@ -7,3 +7,6 @@ src/
 .circleci/
 markdown_img_url_editor_rust/
 pkg/
+.prettierrc.json
+.prettierignore
+results/*
