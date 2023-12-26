@@ -41,6 +41,10 @@
         "format": ["camelCase"],
         "leadingUnderscore": "allow",
         "trailingUnderscore": "allow"
+      },
+      {
+        "selector": "import",
+        "format": ["camelCase", "PascalCase"]
       }
     ],
     "@typescript-eslint/explicit-function-return-type": "off",
