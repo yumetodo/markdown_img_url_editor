@@ -13,6 +13,8 @@ jobs:
         executor: default
         steps:
             - checkout
+            - node/install:
+                node-version: '18'
             - restore_cache:
                 key: node_modules-2-{{ checksum "package.json" }}-{{ checksum "package-lock.json"}}
             - run: npm ci
@@ -40,31 +42,8 @@ jobs:
                 root: ~/repo
                 paths:
                     - dist
-    publish:
-        executor: default
-        steps:
-            - tool_install
-            - checkout
-            - attach_workspace:
-                at: ~/repo
-            - run: npm ci
-            - run: echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
-            - run:
-                command: |
-                    if can-npm-publish --verbose; then
-                        npm publish
-                    else
-                        echo "publish skipped"
-                    fi
 workflows:
     version: 2
     publishflow:
         jobs:
             - test
-            - publish:
-                context: npm
-                requires:
-                    - test
-                filters:
-                    tags:
-                        only: /^v.*/
