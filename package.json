@@ -39,7 +39,7 @@
     "verifiable-file-read-all-cache": "^1.1.2"
   },
   "dependencies": {
-    "markdown_img_url_editor_rust": "^1.0.4"
+    "markdown_img_url_editor_rust": "^1.0.5"
   },
   "jest": {
     "transform": {
