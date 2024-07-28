@@ -1,8 +1,10 @@
 version: 2.1
+orbs:
+    node: circleci/node@5.2.0
 executors:
     default:
         docker:
-            - image: circleci/node:lts
+            - image: cimg/base:stable
         working_directory: ~/repo
 commands:
     tool_install:
