@@ -1,22 +1,18 @@
 version: 2.1
 orbs:
-    node: circleci/node@5.2.0
+    node: cimg/node:lts
 executors:
     default:
         docker:
             - image: cimg/base:stable
         working_directory: ~/repo
-commands:
-    tool_install:
-        steps:
-            - run: sudo npm i -g can-npm-publish
 jobs:
     test:
         executor: default
         steps:
             - checkout
             - node/install:
-                node-version: '18'
+                node-version: '22'
             - restore_cache:
                 key: node_modules-2-{{ checksum "package.json" }}-{{ checksum "package-lock.json"}}
             - run: npm ci
@@ -46,6 +42,6 @@ jobs:
                     - dist
 workflows:
     version: 2
-    publishflow:
+    workflow:
         jobs:
             - test
