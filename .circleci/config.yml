@@ -1,10 +1,8 @@
 version: 2.1
-orbs:
-    node: cimg/node:lts
 executors:
     default:
         docker:
-            - image: cimg/base:stable
+            - image: cimg/node:lts
         working_directory: ~/repo
 jobs:
     test:
